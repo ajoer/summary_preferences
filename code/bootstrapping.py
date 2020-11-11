@@ -101,18 +101,19 @@ class Bootstrapping():
 		for demographic_class in self.demographic_representations:
 			
 			print(f"\nComparisons in {demographic_class}")
-			total_comparisons = sum(list(range(1, len(self.demographic_representations[demographic_class]))))
 			comparison_data = {}
+			n_interest_groups = 0
 
 			for interest_group in self.demographic_representations[demographic_class]:
 				interest_group_preferences, rest_preferences = self._get_group_preferences(interest_group)
 				if interest_group_preferences == None: 
-					total_comparisons -= 1
 					continue
 				comparison_data[interest_group] = {
 					"interest_group_preferences": interest_group_preferences,
 					"rest_preferences": rest_preferences
 				}
+
+			total_comparisons = sum(list(range(1, len(comparison_data.keys()))))
 			for interest_group in comparison_data:
 				self._bootstrap(comparison_data[interest_group], interest_group, total_comparisons)
 
