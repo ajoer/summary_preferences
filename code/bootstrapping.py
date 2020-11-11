@@ -66,7 +66,7 @@ class Bootstrapping():
 		won_rounds = Counter()
 		rounds = 1000
 		sample_size = 100
-		cut_off = 0.05
+		self.cut_off = 0.05
 
 		for r in range(rounds):
 			group1_set = []
@@ -85,15 +85,17 @@ class Bootstrapping():
 		won_rounds[group1] = won_rounds[group1]/rounds
 		won_rounds[group2] = won_rounds[group2]/rounds
 
-		if cut_off > won_rounds[group1] or won_rounds[group1] > (100-cut_off):
+		if self.cut_off > won_rounds[group1] or won_rounds[group1] > (100-self.cut_off):
 			print(f"Significant result between {group1} and {group2}:\t{won_rounds[group1]}/{won_rounds[group2]}") 
 
 
 	def compare_demographic_groups(self):
 		self._get_demographic_groups()
+		total_comparisons = 0
 		for demographic_class in self.demographic_representations:
 			done = []
 			print(f"\nComparisons within {demographic_class}\n")
+
 			for group1 in self.demographic_representations[demographic_class]:
 				group1_preferences = self._get_group_preferences(group1)
 				if group1_preferences == None: continue
@@ -107,6 +109,9 @@ class Bootstrapping():
 					if group2_preferences == None: continue
 
 					self._bootstrap(group1_preferences, group2_preferences, group1, group2)
+					total_comparisons += 1
+		print("Total number of comparisons conducted:\t", total_comparisons)
+		print("Bonferroni correction:\t", self.cut_off/total_comparisons)
 
 def main(biography_representations):
 
