@@ -87,7 +87,7 @@ class MakeVectors():
 			# Gold:
 			# 1 (= female_under30_nonwhite_textrank)?
 			if ( self.biography_representations[br]["summary_preference"] == "textrank" and 
-				 self.biography_representations[br]['demographics'] == {"agegroup": "under30", "gender": "female", "race": "nonwhite"}):
+				 self.biography_representations[br]['demographics'] == {"agegroup": "under30", "gender": "female", "race": "black"}):
 				y = 1
 			else:
 				y = 0
@@ -99,6 +99,6 @@ class MakeVectors():
 			
 def main(biography_representations):
 	data = MakeVectors(biography_representations).make_vector_representations()
-	
+	print(data)
 if __name__ == "__main__":
-   	main(json.load(open("data/analyses/biography_representations_all.json")))
+   	main(json.load(open("analyses/all/biography_representations.json")))

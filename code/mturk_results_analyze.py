@@ -54,7 +54,7 @@ class AnalyzeMTurkData():
 
 		self.make_demographics_dict()
 
-		if args.gender != "both": self.get_gendered_data(args.gender)
+		#if args.gender != "both": self.get_gendered_data(args.gender)
 
 		total = len(self.data)
 		self.main()
@@ -250,7 +250,7 @@ class AnalyzeMTurkData():
 			}
 			table = [["Demographics", "TextRank", "%", "MatchSum", "%", "neither", "%"]]
 
-			with open(f'data/analyses/{self.race_division}/preferences_{demographic_class}.txt', 'w') as f:
+			with open(f'analyses/{self.race_division}/preferences_{demographic_class}.txt', 'w') as f:
 				for representation in sorted(self.preferences[demographic_class]):
 					if representation in self.too_small_representations: continue
 					representation_line = [representation]
@@ -272,7 +272,7 @@ class AnalyzeMTurkData():
 				["Demographics", "TextRank", "MatchSum", "TextRank", "MatchSum", "TextRank", "MatchSum"]
 			]
 
-			with open(f'data/analyses/{self.race_division}/ratings_{demographic_class}.txt', 'w') as f:
+			with open(f'analyses/{self.race_division}/ratings_{demographic_class}.txt', 'w') as f:
 				for representation in sorted(self.percentage_ratings[demographic_class]):
 					representation_data = self.percentage_ratings[demographic_class][representation]
 					if representation in self.too_small_representations: continue
@@ -288,7 +288,7 @@ class AnalyzeMTurkData():
 			["Demographics", "TextRank", "MatchSum", "TextRank", "MatchSum", "TextRank", "MatchSum"]
 		]
 
-		with open(f'data/analyses/{self.race_division}/ratings_total.txt', 'w') as f:
+		with open(f'analyses/{self.race_division}/ratings_total.txt', 'w') as f:
 			for value in ["0","1","2","3"]:
 				line = [value]
 				for element in sorted(self.ratings["gender"]["female"]["textrank"]):
@@ -325,20 +325,15 @@ class AnalyzeMTurkData():
 		self.print_preferences()
 		self.print_ratings()
 
-		with open(f"data/analyses/{self.race_division}/biography_representations.json", "w") as outfile:
+		with open(f"analyses/{self.race_division}/biography_representations.json", "w") as outfile:
 			json.dump(self.biography_representations, outfile, sort_keys=True, indent=4,)
 
 if __name__ == "__main__":
 
-	parser = argparse.ArgumentParser(description='Process some integers.')
-	parser.add_argument('input_file', default="Batch_4235328_batch_results")
-	parser.add_argument('--gender', default="both", help='all biographies, only women or only men.')
-	args = parser.parse_args()
+	mturk_data = pd.read_csv("data/mturk/output/reviewed/Batch_4235328_batch_results_reviewed.csv")
 
-	mturk_data = pd.read_csv("data/mturk_results/reviewed/Batch_4235328_batch_results_reviewed.csv")
-
-	a = AnalyzeMTurkData(mturk_data, race_division="all")
-	a.make_demographics_dict() # race_division = all or binary
+	a = AnalyzeMTurkData(mturk_data, race_division="all") # race_division = all or binary
+	a.make_demographics_dict() 
 
 
 

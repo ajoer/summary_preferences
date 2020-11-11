@@ -10,7 +10,7 @@ from collections import Counter
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 """
-	Perform bootstrapping on MTurk preferences.
+	Bootstrapping on MTurk preferences.
 
 """
 
@@ -46,7 +46,6 @@ class Bootstrapping():
 			representations.append(rep)
 
 		return representations
-
 			
 	def _get_demographic_groups(self):
 		for person in self.biography_representations:
@@ -59,7 +58,8 @@ class Bootstrapping():
 		for person in self.biography_representations:
 			if demographic_group in self.biography_representations[person]["demographic_group"]:
 				group_preferences.append(self.biography_representations[person]["summary_preference"])
-		if len(group_preferences) < 20: return None
+		if len(group_preferences) < 20: 
+			return None
 		return group_preferences
 
 	def _bootstrap(self, group1_preferences, group2_preferences, group1, group2):
@@ -86,7 +86,7 @@ class Bootstrapping():
 		won_rounds[group2] = won_rounds[group2]/rounds
 
 		if cut_off > won_rounds[group1] or won_rounds[group1] > (100-cut_off):
-			print(f"Significant result between {group1} and {group2}:\t{won_rounds[group1]}/{won_rounds[group2]}", ) 
+			print(f"Significant result between {group1} and {group2}:\t{won_rounds[group1]}/{won_rounds[group2]}") 
 
 
 	def compare_demographic_groups(self):
@@ -113,4 +113,4 @@ def main(biography_representations):
 	Bootstrapping(biography_representations).compare_demographic_groups()
 	
 if __name__ == "__main__":
-   	main(json.load(open("data/analyses/biography_representations_all.json")))
+   	main(json.load(open("analyses/all/biography_representations.json")))
