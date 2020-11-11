@@ -54,64 +54,67 @@ class Bootstrapping():
 			self.biography_representations[person]["demographic_group"] = representations
 
 	def _get_group_preferences(self, demographic_group):
-		group_preferences = []
+		interest_group_preferences = []
+		rest_preferences = []
+
 		for person in self.biography_representations:
 			if demographic_group in self.biography_representations[person]["demographic_group"]:
-				group_preferences.append(self.biography_representations[person]["summary_preference"])
-		if len(group_preferences) < 20: 
-			return None
-		return group_preferences
+				interest_group_preferences.append(self.biography_representations[person]["summary_preference"])
+			else:
+				rest_preferences.append(self.biography_representations[person]["summary_preference"])
+		if len(interest_group_preferences) < 20: 
+			return None, None
+		return interest_group_preferences, rest_preferences
 
-	def _bootstrap(self, group1_preferences, group2_preferences, group1, group2):
-		won_rounds = Counter()
+	def _bootstrap(self, comparison_data, interest_group, total_comparisons):
 		rounds = 1000
-		sample_size = 100
-		self.cut_off = 0.05
+		sample_size = len(comparison_data["interest_group_preferences"])+len(comparison_data["rest_preferences"])
+		bonferroni_cutoff = 0.05/total_comparisons
 
+		won_rounds = Counter()
+		
 		for r in range(rounds):
-			group1_set = []
-			group2_set = []
+			interest_group_set = []
+			rest_set = []
 
 			for s in range(sample_size):
-				group1_set.append(random.sample(group1_preferences, 1)[0])
-				group2_set.append(random.sample(group2_preferences, 1)[0])
+				interest_group_set.append(random.sample(comparison_data["interest_group_preferences"], 1)[0])
+				rest_set.append(random.sample(comparison_data["rest_preferences"], 1)[0])
 
-			first = Counter(group1_set)
-			second = Counter(group2_set)
-			if first["textrank"] > second["textrank"]:
-				won_rounds[group1] += 1
+			interest_group_counter = Counter(interest_group_set)
+			rest_counter = Counter(rest_set)
+
+			if interest_group_counter["textrank"] > rest_counter["textrank"]:
+				won_rounds[interest_group] += 1
 			else:
-				won_rounds[group2] += 1
-		won_rounds[group1] = won_rounds[group1]/rounds
-		won_rounds[group2] = won_rounds[group2]/rounds
+				won_rounds["rest"] += 1
 
-		if self.cut_off > won_rounds[group1] or won_rounds[group1] > (100-self.cut_off):
-			print(f"Significant result between {group1} and {group2}:\t{won_rounds[group1]}/{won_rounds[group2]}") 
+		for group in won_rounds:
+			won_rounds[group] = won_rounds[group]/rounds
 
+		if bonferroni_cutoff > won_rounds[interest_group] or won_rounds[interest_group] > (100-bonferroni_cutoff):
+			print(f"Significant result between {interest_group} and the rest:\t{won_rounds[interest_group]}/{won_rounds['rest']} (Bonferroni = {bonferroni_cutoff}, {total_comparisons} comparisons)") 
 
 	def compare_demographic_groups(self):
 		self._get_demographic_groups()
-		total_comparisons = 0
+
 		for demographic_class in self.demographic_representations:
-			done = []
-			print(f"\nComparisons within {demographic_class}\n")
+			
+			print(f"\nComparisons in {demographic_class}")
+			total_comparisons = sum(list(range(1, len(self.demographic_representations[demographic_class]))))
+			comparison_data = {}
 
-			for group1 in self.demographic_representations[demographic_class]:
-				group1_preferences = self._get_group_preferences(group1)
-				if group1_preferences == None: continue
-
-				for group2 in self.demographic_representations[demographic_class]:
-					if group1 == group2: continue
-					if (group2, group1) in done: continue
-					done.append((group1, group2))
-
-					group2_preferences = self._get_group_preferences(group2)
-					if group2_preferences == None: continue
-
-					self._bootstrap(group1_preferences, group2_preferences, group1, group2)
-					total_comparisons += 1
-		print("Total number of comparisons conducted:\t", total_comparisons)
-		print("Bonferroni correction:\t", self.cut_off/total_comparisons)
+			for interest_group in self.demographic_representations[demographic_class]:
+				interest_group_preferences, rest_preferences = self._get_group_preferences(interest_group)
+				if interest_group_preferences == None: 
+					total_comparisons -= 1
+					continue
+				comparison_data[interest_group] = {
+					"interest_group_preferences": interest_group_preferences,
+					"rest_preferences": rest_preferences
+				}
+			for interest_group in comparison_data:
+				self._bootstrap(comparison_data[interest_group], interest_group, total_comparisons)
 
 def main(biography_representations):
 
