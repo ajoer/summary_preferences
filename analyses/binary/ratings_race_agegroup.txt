@@ -1,0 +1,10 @@
+\begin{tabular}{lllllll}
+\hline
+                  & Informative &          & Useful   &          & Fluent   &          \\
+ Demographics     & TextRank    & MatchSum & TextRank & MatchSum & TextRank & MatchSum \\
+ nonwhite/over30  & 0.75        & 0.9      & 0.67     & 0.89     & 0.78     & 0.89     \\
+ nonwhite/under30 & 0.83        & 0.84     & 0.78     & 0.83     & 0.84     & 0.86     \\
+ white/over30     & 0.95        & 0.96     & 0.96     & 0.97     & 0.91     & 0.95     \\
+ white/under30    & 0.73        & 0.78     & 0.67     & 0.76     & 0.8      & 0.81     \\
+\hline
+\end{tabular}

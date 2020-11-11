@@ -1,0 +1,11 @@
+\begin{tabular}{lllllll}
+\hline
+ Demographics           & TextRank & \%    & MatchSum & \%    & neither & \%    \\
+ american\_indian/over30 & 9        & 42.9 & 12       & 57.1 & 0       & 0.0  \\
+ asian/under30          & 14       & 34.1 & 16       & 39.0 & 11      & 26.8 \\
+ black/under30          & 25       & 49.0 & 22       & 43.1 & 4       & 7.8  \\
+ hispanic/under30       & 11       & 40.7 & 16       & 59.3 & 0       & 0.0  \\
+ white/over30           & 249      & 40.0 & 319      & 51.3 & 54      & 8.7  \\
+ white/under30          & 75       & 43.6 & 92       & 53.5 & 5       & 2.9  \\
+\hline
+\end{tabular}
