@@ -1,0 +1,18 @@
+\begin{tabular}{lll}
+\hline
+ Demographics            & Count & Percentage \\
+ over30/american\_indian  & 36    & 1.9        \\
+ over30/asian            & 8     & 0.4        \\
+ over30/black            & 42    & 2.2        \\
+ over30/hispanic         & 9     & 0.5        \\
+ over30/other            & 28    & 1.4        \\
+ over30/white            & 1089  & 56.2       \\
+ under30/american\_indian & 9     & 0.5        \\
+ under30/asian           & 60    & 3.1        \\
+ under30/black           & 329   & 17.0       \\
+ under30/hispanic        & 30    & 1.5        \\
+ under30/other           & 15    & 0.8        \\
+ under30/white           & 283   & 14.6       \\
+ Total                   & 1938  & 100.0      \\
+\hline
+\end{tabular}

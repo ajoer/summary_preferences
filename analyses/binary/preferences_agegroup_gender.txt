@@ -1,0 +1,9 @@
+\begin{tabular}{lllllll}
+\hline
+ Demographics   & TextRank & \%    & MatchSum & \%    & neither & \%   \\
+ over30/female  & 202      & 41.3 & 257      & 52.6 & 30      & 6.1 \\
+ over30/male    & 278      & 39.2 & 361      & 50.9 & 70      & 9.9 \\
+ under30/female & 128      & 44.0 & 140      & 48.1 & 23      & 7.9 \\
+ under30/male   & 202      & 45.0 & 226      & 50.3 & 21      & 4.7 \\
+\hline
+\end{tabular}

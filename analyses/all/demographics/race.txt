@@ -1,0 +1,12 @@
+\begin{tabular}{lll}
+\hline
+ Demographics    & Count & Percentage \\
+ american\_indian & 45    & 2.3        \\
+ asian           & 68    & 3.5        \\
+ black           & 371   & 19.1       \\
+ hispanic        & 39    & 2.0        \\
+ other           & 43    & 2.2        \\
+ white           & 1372  & 70.8       \\
+ Total           & 1938  & 100.0      \\
+\hline
+\end{tabular}

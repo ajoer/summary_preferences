@@ -1,0 +1,29 @@
+\begin{tabular}{lll}
+\hline
+ Demographics                   & Count & Percentage \\
+ female/american\_indian/over30  & 31    & 1.6        \\
+ female/american\_indian/under30 & 8     & 0.4        \\
+ female/asian/over30            & 5     & 0.3        \\
+ female/asian/under30           & 5     & 0.3        \\
+ female/black/over30            & 29    & 1.5        \\
+ female/black/under30           & 141   & 7.3        \\
+ female/hispanic/over30         & 4     & 0.2        \\
+ female/hispanic/under30        & 3     & 0.2        \\
+ female/other/over30            & 28    & 1.4        \\
+ female/other/under30           & 9     & 0.5        \\
+ female/white/over30            & 406   & 20.9       \\
+ female/white/under30           & 111   & 5.7        \\
+ male/american\_indian/over30    & 5     & 0.3        \\
+ male/american\_indian/under30   & 1     & 0.1        \\
+ male/asian/over30              & 3     & 0.2        \\
+ male/asian/under30             & 55    & 2.8        \\
+ male/black/over30              & 13    & 0.7        \\
+ male/black/under30             & 188   & 9.7        \\
+ male/hispanic/over30           & 5     & 0.3        \\
+ male/hispanic/under30          & 27    & 1.4        \\
+ male/other/under30             & 6     & 0.3        \\
+ male/white/over30              & 683   & 35.2       \\
+ male/white/under30             & 172   & 8.9        \\
+ Total                          & 1938  & 100.0      \\
+\hline
+\end{tabular}

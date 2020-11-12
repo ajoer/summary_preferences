@@ -1,0 +1,13 @@
+\begin{tabular}{lllllll}
+\hline
+ Demographics            & TextRank & \%    & MatchSum & \%    & neither & \%    \\
+ female/nonwhite/over30  & 34       & 35.1 & 59       & 60.8 & 4       & 4.1  \\
+ female/nonwhite/under30 & 73       & 40.6 & 92       & 51.1 & 15      & 8.3  \\
+ female/white/over30     & 168      & 42.9 & 198      & 50.5 & 26      & 6.6  \\
+ female/white/under30    & 55       & 49.5 & 48       & 43.2 & 8       & 7.2  \\
+ male/nonwhite/over30    & 27       & 40.9 & 38       & 57.6 & 1       & 1.5  \\
+ male/nonwhite/under30   & 132      & 47.7 & 130      & 46.9 & 15      & 5.4  \\
+ male/white/over30       & 251      & 39.0 & 323      & 50.2 & 69      & 10.7 \\
+ male/white/under30      & 70       & 40.7 & 96       & 55.8 & 6       & 3.5  \\
+\hline
+\end{tabular}
