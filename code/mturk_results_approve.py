@@ -153,11 +153,12 @@ class ReviewAssignments():
 
 		average = sum(self.normalized_worktimes.values())/len(self.normalized_worktimes)
 		standard_deviation = stdev(list(self.normalized_worktimes.values()))
-		self.minimum_worktime = average-(0.5*standard_deviation)
+		self.minimum_worktime = average-(0.75*standard_deviation)
 
-	def _do_rejection(self, reason, worker_id, task_id, worktime):
-		self.rejections.append([reason, worker_id, task_id, worktime])
-		self.rejected_assignments += 1
+	def _do_rejection(self, reason, worker_id, task_id, worktime, assignment_status):
+		if assignment_status == "Submitted":
+			self.rejections.append([reason, worker_id, task_id, worktime])
+			self.rejected_assignments += 1
 		self.rejected_column.append(reason+self.justification)
 		self.approved_column.append("")
 
@@ -171,22 +172,28 @@ class ReviewAssignments():
 			task_id = worker_data["HITId"]
 			worktime = worker_data["WorkTimeInSeconds"]
 			
+			if worker_id == "A11EBMORZXLJJJ":
+				words = len(worker_data["Input.biography"].split())+432
+				print("worktime", worktime)
+				print("words", words)
+				print(worktime/words)
+
 			# Too short time spent
 			if self.normalized_worktimes[f"{worker_id}_{index}"] < self.minimum_worktime:
-				reason = f"You spend an unreasonably short amount of time on the task ({worktime} seconds) compared to other workers and the length of the texts."
-				self._do_rejection(reason, worker_id, task_id, worktime)
+				reason = f"You spent an unreasonably short amount of time on the task ({worktime} seconds) compared to other workers and the length of the texts."
+				self._do_rejection(reason, worker_id, task_id, worktime, worker_data["AssignmentStatus"])
 
 			else:
 				# Reject based on demographics
-				verification, reason = self._verify_demographics(worker_id) #worker_data)
+				verification, reason = self._verify_demographics(worker_id)
 				if not verification:
-					self._do_rejection(reason, worker_id, task_id, worktime)
+					self._do_rejection(reason, worker_id, task_id, worktime, worker_data["AssignmentStatus"])
 					
 				# Reject based on task incompletion
 				else:
 					verification, reason = self._verify_task_completion(worker_data)
 					if not verification:
-						self._do_rejection(reason, worker_id, task_id, worktime)
+						self._do_rejection(reason, worker_id, task_id, worktime, worker_data["AssignmentStatus"])
 					else:
 						# Approve the rest
 						reason = ""

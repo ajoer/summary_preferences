@@ -7,6 +7,8 @@ import textstat
 
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 """
 	Make vector representations of summaries and do experiment
 """
@@ -69,6 +71,7 @@ class MakeVectors():
 	def make_vector_representations(self):
 		# Make vector representation for each summary pair.
 
+		print("Making vector representations")
 		for br in self.biography_representations:
 			
 			biography = self._clean_text(self.biography_representations[br]["biography"])
@@ -79,26 +82,51 @@ class MakeVectors():
 			textrank_features = self._get_features(textrank, biography)
 			matchsum_features = self._get_features(matchsum, biography)
 			vector_representation = np.append(textrank_features, matchsum_features)
-			self.data["X"].append(vector_representation)
-
-			# Exclude "neither" or include in "other" class?
-			#if biography_representations[br]["summary_preference"] == "neither": continue
-
-			# Gold:
-			# 1 (= female_under30_nonwhite_textrank)?
-			if ( self.biography_representations[br]["summary_preference"] == "textrank" and 
-				 self.biography_representations[br]['demographics'] == {"agegroup": "under30", "gender": "female", "race": "black"}):
+			
+			if self.biography_representations[br]["summary_preference"] == "textrank":
 				y = 1
-			else:
+			elif self.biography_representations[br]["summary_preference"] == "matchsum":
 				y = 0
 
+			else: continue # if preference == 'neither'
+
 			self.data["Y"].append(y)
+			self.data["X"].append(vector_representation)
+
 		assert(len(self.data["Y"]) == len(self.data["X"]))
+
 		return self.data
+
+class TextClassification():
+	def __init__(self, data):
+
+		print("Starting text classification")
+		self.input_data = data
+		self._split_data()
+		self.main()
+
+	def _split_data(self):
+		
+		scaler = StandardScaler()
+		self.input_data["X"] = scaler.fit_transform(self.input_data["X"])
+
+		split = int(round(len(self.input_data["X"])*0.2,0))
+		self.classification_data = {
+			"train_X": self.input_data["X"][split:], 
+			"train_Y": self.input_data["Y"][split:], 
+			"test_X": self.input_data["X"][:split], 
+			"test_Y": self.input_data["Y"][:split]
+		}
+
+	def main(self):
+		clf = LogisticRegression(random_state=0, max_iter=1000).fit(self.classification_data["train_X"], self.classification_data["train_Y"])
+		print("Done fitting")
+		print(clf.score(self.classification_data["test_X"], self.classification_data["test_Y"]))
 
 			
 def main(biography_representations):
 	data = MakeVectors(biography_representations).make_vector_representations()
-	print(data)
+	TextClassification(data)
+
 if __name__ == "__main__":
    	main(json.load(open("analyses/all/biography_representations.json")))

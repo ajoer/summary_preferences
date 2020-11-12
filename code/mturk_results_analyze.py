@@ -37,23 +37,32 @@ class AnalyzeMTurkData():
 		self.race_division = race_division
 
 		self.demographics_distribution = {
+			"agegroup": Counter(),
+			"gender": Counter(),
+			"race": Counter(),
+			"gender_race": Counter(),
+			"agegroup_gender": Counter(),
+			"agegroup_race": Counter(),
+			"agegroup_gender_race": Counter()
+		}
+		self.ratings = {
 			"agegroup": {},
 			"gender": {},
 			"race": {},
 			"gender_race": {},
-			"gender_agegroup": {},
-			"race_agegroup": {},
-			"gender_race_agegroup": {}
+			"agegroup_gender": {},
+			"agegroup_race": {},
+			"agegroup_gender_race": {}
 		}
-		self.ratings = copy.deepcopy(self.demographics_distribution)
-		self.preferences = copy.deepcopy(self.demographics_distribution)
+		self.preferences = copy.deepcopy(self.ratings)
 		
 		self.demographics_dict = {}
-		self.workers_per_demo = Counter()
-		self.tasks_per_race = Counter()
-		self.ages = Counter()
+		#self.ages = Counter()
+		self.worker_counter = Counter()
 
 		self.make_demographics_dict()
+		self.make_demographics_distribution()
+		self.make_demographics_table()
 
 		#if args.gender != "both": self.get_gendered_data(args.gender)
 
@@ -95,28 +104,19 @@ class AnalyzeMTurkData():
 					demographics["race"] = race
 		return demographics
 
-	def make_demographics_dict(self):
-		# Make dictionary of demographics for workers.
+
+	def _workers_tasks_per_demographics(self):
+		# Add worker demographics to workers_per_demo overview (making sure there are a good number of Turkers per demographic group and get an average # of tasks for each worker)
 		
-		worker_counter = Counter()
+		workers_per_demo = Counter()
+		tasks_per_race = Counter()
 		done = []
 		
-		for index, worker_data in self.data.iterrows():
-
-			worker_counter[worker_data["WorkerId"]] += 1
-			demographics = self.get_worker_demographics(worker_data)
-			if None in demographics.values(): continue
-			self.demographics_dict[worker_data["WorkerId"]] = demographics
-
-		# Add worker demographics to workers_per_demo overview (making sure there are a good number of Turkers per demographic group and get an average # of tasks for each worker)
 		for worker_id in self.demographics_dict:
-
-			#self.ages[self.demographics_dict[worker_id]["age"]] += 1
-
 			for demo_variable in self.demographics_dict[worker_id]:
 				if demo_variable == "age": continue
-				self.workers_per_demo[self.demographics_dict[worker_id][demo_variable]] += 1
-				self.tasks_per_race[self.demographics_dict[worker_id][demo_variable]] += worker_counter[worker_id]
+				workers_per_demo[self.demographics_dict[worker_id][demo_variable]] += 1
+				tasks_per_race[self.demographics_dict[worker_id][demo_variable]] += self.worker_counter[worker_id]
 
 				for demo_variable2 in self.demographics_dict[worker_id]:
 
@@ -125,19 +125,73 @@ class AnalyzeMTurkData():
 					if (demo_variable, demo_variable2) in done: continue
 					done.append((demo_variable, demo_variable2))
 
-					self.workers_per_demo[f"{self.demographics_dict[worker_id][demo_variable]}/{self.demographics_dict[worker_id][demo_variable2]}"] += 1
-					self.tasks_per_race[f"{self.demographics_dict[worker_id][demo_variable]}/{self.demographics_dict[worker_id][demo_variable2]}"] += worker_counter[worker_id]
+					workers_per_demo[f"{self.demographics_dict[worker_id][demo_variable]}/{self.demographics_dict[worker_id][demo_variable2]}"] += 1
+					tasks_per_race[f"{self.demographics_dict[worker_id][demo_variable]}/{self.demographics_dict[worker_id][demo_variable2]}"] += self.worker_counter[worker_id]
 
-			self.workers_per_demo[f"{self.demographics_dict[worker_id]['race']}/{self.demographics_dict[worker_id]['gender']}/{self.demographics_dict[worker_id]['agegroup']}"] += 1
-			self.tasks_per_race[f"{self.demographics_dict[worker_id]['race']}/{self.demographics_dict[worker_id]['gender']}/{self.demographics_dict[worker_id]['agegroup']}"] += worker_counter[worker_id]
+			workers_per_demo[f"{self.demographics_dict[worker_id]['race']}/{self.demographics_dict[worker_id]['gender']}/{self.demographics_dict[worker_id]['agegroup']}"] += 1
+			tasks_per_race[f"{self.demographics_dict[worker_id]['race']}/{self.demographics_dict[worker_id]['gender']}/{self.demographics_dict[worker_id]['agegroup']}"] += self.worker_counter[worker_id]
 
-		# table = []
-		# for i in workers_per_demo:
-		# 	table.append([i, workers_per_demo[i], tasks_per_race[i], tasks_per_race[i]/workers_per_demo[i]])
-		# print(tabulate(table, tablefmt="latex"))
+		table = [["Demographics", "nr. workers", "nr. tasks", "average # tasks/worker"]]
+		for i in workers_per_demo:
+			table.append([i, workers_per_demo[i], tasks_per_race[i], int(round(tasks_per_race[i]/workers_per_demo[i],0))])
+		print(tabulate(table, tablefmt="latex"))
+
+
+	def make_demographics_dict(self):
+		# Make dictionary of demographics for workers.
+		
+		for index, worker_data in self.data.iterrows():
+
+			self.worker_counter[worker_data["WorkerId"]] += 1
+			demographics = self.get_worker_demographics(worker_data)
+			if None in demographics.values(): continue
+			self.demographics_dict[worker_data["WorkerId"]] = demographics
+
+		#_workers_tasks_per_demographics()
+
+	def make_demographics_distribution(self):
+
+		for worker_id in self.demographics_dict:
+			done = []
+
+			for element in self.demographics_dict[worker_id]:
+				first_level = self.demographics_dict[worker_id][element] 
+				self.demographics_distribution[element][first_level] += self.worker_counter[worker_id]
+
+				for element2 in self.demographics_dict[worker_id]:
+					if element == element2: continue
+					if (element2, element) in done: continue
+					done.append((element, element2))
+					second_level = f"{self.demographics_dict[worker_id][element]}/{self.demographics_dict[worker_id][element2]}"
+					
+					self.demographics_distribution[f"{element}_{element2}"][second_level] += self.worker_counter[worker_id]
+			
+			third_level = f"{self.demographics_dict[worker_id]['gender']}/{self.demographics_dict[worker_id]['race']}/{self.demographics_dict[worker_id]['agegroup']}"
+			self.demographics_distribution["agegroup_gender_race"][third_level] += self.worker_counter[worker_id]
+		
+		# 	tasks_per_race[self.demographics_dict[worker_id][demo_variable]] += self.worker_counter[worker_id]
+
+	def make_demographics_table(self):
+
+		for demographic_class in self.demographics_distribution:
+			table = [["Demographics", "Count", "Percentage"]]
+
+			total = sum(self.demographics_distribution[demographic_class].values())
+			percentages = 0
+			with open(f'analyses/{self.race_division}/demographics/{demographic_class}.txt', 'w') as f:
+				for representation in sorted(self.demographics_distribution[demographic_class]):
+					count = self.demographics_distribution[demographic_class][representation]
+					percentage = round(100*(count/total),1)
+					line = [representation, count, percentage]
+					table.append(line)
+					percentages += percentage
+				table.append(["Total", total, round(percentages,0)])
+				f.write(tabulate(table, tablefmt="latex"))
+
 
 	def get_gendered_data(self, gender):
 		# Make a subset of biographies that are just of one gender.
+
 		genders = ["women", "men"]
 		genders.remove(gender)
 		gender_biographies = json.load(open(f"data/wikipedia_raw/en_{genders[0]}_summaries.json"))
@@ -146,7 +200,8 @@ class AnalyzeMTurkData():
 		self.data = mturk_data[~mturk_data["Input.person"].isin(wrong_gendered_people)]
 
 	def get_preferences(self, worker_data):
-		# Make worker preference dictionary
+		# Make worker preference dictionary.
+
 		preferences = {
 			"summary": None,
 			"informative": {},
@@ -175,6 +230,8 @@ class AnalyzeMTurkData():
 
 
 	def make_percentages_ratings(self):
+		# Make a dictionary of the percentage distributions of ratings across demographic classes.
+
 		self.percentage_ratings = copy.deepcopy(self.ratings)
 		for demographic_class in self.ratings:
 			for representation in self.ratings[demographic_class]:
@@ -195,6 +252,7 @@ class AnalyzeMTurkData():
 	
 
 	def get_demographic_representation(self, demographics, demographic_class):
+		# Make a "representation", e.g. "female/under30" from worker demographics and demographic class (demographic level and type, e.g. gender/age)
 		elements = demographic_class.split("_")
 		if len(elements) == 1:
 			representation = demographics[elements[0]]
@@ -232,6 +290,7 @@ class AnalyzeMTurkData():
 			
 
 	def get_small_representations(self):
+		# Get a list of demographic representations that have too few assignments (e.g. female/American Indian)
 		self.too_small_representations = []
 
 		for demographic_class in self.preferences:
@@ -301,19 +360,22 @@ class AnalyzeMTurkData():
 
 		
 	def main(self):
-		# Demographic information and stats have been taken out. 
-		# Can statistics be made from self.ratings and self.preferences??
-		
+		# Get tables of preferences and ratings.
+
 		for index, worker_data in self.data.iterrows():
 
-			demographics = self.demographics_dict[worker_data["WorkerId"]]
+			try:
+				demographics = self.demographics_dict[worker_data["WorkerId"]]
+			except KeyError:
+				continue
+
 			annotations = self.get_preferences(worker_data)
 
 			# make ratings overviews for all and for each demo group.
 			self.add_annotations(demographics, annotations)
 
 			# Make dictionary with demographics of the Turker, and the texts for deeper analysis.
-			self.biography_representations[f"{worker_data['Input.person']}_{worker_data['WorkerId']}"] = {
+			self.biography_representations[f"{worker_data['Input.person']}_{worker_data['WorkerId']}_{worker_data['HITId']}"] = {
 				"person": worker_data['Input.person'],
 				"demographics": demographics,
 				"summary_preference": annotations["summary"],
@@ -334,8 +396,5 @@ if __name__ == "__main__":
 	input_data = [ pd.read_csv(file) for file in glob.glob("data/mturk/output/reviewed/Batch*") ] 
 	mturk_data = pd.concat(input_data, ignore_index=True)
 	a = AnalyzeMTurkData(mturk_data, race_division="all") # race_division = all or binary
-	a.make_demographics_dict() 
-
-
-
+	
 
