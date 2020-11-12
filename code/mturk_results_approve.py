@@ -9,7 +9,6 @@ from tabulate import tabulate
 	Input: csv file from MTurk results page
 	Output: csv file with approve/reject for each task/worker. This can be directly uploaded to MTurk for approval/rejection.
 
-
 	Checks the following:
 
 	ID:
@@ -26,155 +25,183 @@ from tabulate import tabulate
 
 """
 
-input_data = pd.read_csv(f"data/mturk_results/{sys.argv[1]}.csv") # "data/mturk_results/Batch_4209166_batch_results.csv")
+class ReviewAssignments():
 
-# Unique worker IDs:
-def check_unique_IDs():
-	# Use this to check the distribution of tasks across workers.
-	worker_ids = input_data['WorkerId']
-	if len(worker_ids) != len(set(worker_ids)):
-		print("The same worker did more than one task")
-		print(Counter(worker_ids))
+	def __init__(self, data):
+		self.data = data
+		self.demographics_dict = {}
+		self.justification = """ As mentioned in the instructions, this is grounds for rejection: 'You can complete as many summary rating tasks as you want. You will be paid for the number of tasks you complete. If you leave a question unanswered, the task is incomplete,	and you will not be paid for that task. Afterwards, we will ask you four questions about who you are. If there are discrepancies in your answers to the demographic questions, we will exclude you from the experiment, and you will not be paid.'
+		"""
 
-def demographics_complete(worker_data):
-	# Verify whether each demographic element has an answer, i.e. one True value per element options.
-	
-	demographic_columns = {
-		"age": ['Answer.age.30', 'Answer.age.older', 'Answer.age.younger'], #, 
-		"gender": ['Answer.gender.female', 'Answer.gender.male', 'Answer.gender.other'],
-		"race": ['Answer.race.american_indian','Answer.race.asian', 'Answer.race.black', 
-			'Answer.race.hispanic', 'Answer.race.other', 'Answer.race.white']
-	}
+		self.total_assignments = self.data.shape[0]
+		self.rejected_assignments = 0
+		self.approved_column = []
+		self.rejected_column = []
+		self.rejections = [["Reason for rejection", "Worker", "Task", "Task duration"]]
+		self._get_minimum_worktime()
+		self._make_demographics_dict()
 
-	for demographic_element in demographic_columns:
-		if not True in [worker_data[column] for column in demographic_columns[demographic_element]]:
-			reason = f"missing {demographic_element}"
-			return False, reason
-	
-	if not worker_data["Answer.typed_age"]:
-		reason = "missing typed age"
-		return False, reason
-
-	return True, ""
-			
-def verify_demographics(worker_data):
-	# Verify that the demographics are complete and have no discrepancies. 
-	# Return True (verified) or False (rejected).
-	# Reject worker if incomplete demographics
-	complete, reason = demographics_complete(worker_data)
-	if not complete:
-		return False, f"Incomplete demographics ({reason})"
-
-	verified = True
-	reason = ""
-
-	# Reject worker if discrepancies in age:
-	age = worker_data["Answer.typed_age"]
-	if worker_data["Answer.age.younger"] == True:
-		if age >= 30:
-			reason = f"Discrepancies in age. You put that you are younger than 30, but typed that you are {age}. As mentioned in the instructions, this is grounds for rejection."
-			verified = False
-	elif worker_data["Answer.age.older"] == True:
-		if worker_data["Answer.typed_age"] <= 30:
-			reason = f"Discrepancies in age. You put that you are older than 30, but typed that you are {age}. As mentioned in the instructions, this is grounds for rejection."
-			verified = False
-	elif worker_data["Answer.age.30"] == True:
-		if worker_data["Answer.typed_age"] != 30:
-			reason = f"Discrepancies in age. You put that you are 30, but typed that you are {age}. As mentioned in the instructions, this is grounds for rejection."
-			verified = False
-
-	# if worker_data["WorkerId"] in double_check:
-	# 	print(worker_data["WorkerId"], race)
-	return verified, reason
-
-def verify_task_completion(worker_data):
-	# Verify whether each task element has an answer, i.e. one True value per element options.
-	for task_element in ["informative", "fluent", "useful"]:
-		for letter in ["A", "B"]:
-			if not True in [worker_data[f'Answer.{task_element}_{letter}.{num}'] for num in range(4)]:
-				reason = f"You did not rate the element '{task_element}' for summary {letter}. As mentioned in the instructions, this is grounds for rejection."
-				return False, reason
-
-	if not True in [worker_data[f'Answer.summary_preference.{letter}'] for letter in ["a", "b", "non"]]:
-		reason = "Missing summary preference entry. As mentioned in the instructions, this is grounds for rejection."
-		return False, reason
-
-	return True, ""
-
-def get_minimum_worktime():
-	# Get average normalized worktime, and standard deviation. 
-	# Used to exclude workers who spend too little time on task.
-	normalized_worktimes = {}
-	remove_workers = []
-	
-	for index, worker_data in input_data.iterrows():
-		time = worker_data["WorkTimeInSeconds"]
-		words = len(worker_data["Input.biography"].split())
-		normalized_worktime = time/words
-		normalized_worktimes[worker_data["WorkerId"]] = normalized_worktime
-
-	average = sum(normalized_worktimes.values())/len(normalized_worktimes)
-	standard_deviation = stdev(list(normalized_worktimes.values()))
-	minimum_worktime = average-standard_deviation
-
-	return normalized_worktimes, minimum_worktime
-
-def main():
-
-	# These workers have previously been rejected wrongly. Make sure their results are preapproved.
-	preapproved_workers = ["A1VRXZADIKWB4S", "A3NYIJYBHAJ74V", "AD82Z4ROMFRU2", "ADLKIX3SBFREV", "A30HK6LL0LCCHF", "A1V3QAZJ9ERJMJ", "A3ANS61F3A656X", "A39ZO6TXOGQLP0"]+["AWCMWOLXMZAAC","A1VRXZADIKWB4S", "AWCMWOLXMZAAC", "A3BDTPHXKVWQRG", "AOEO9ZV81R0I4", "A3559VD53E2JYY", "A2VPVY1PY9H4T4", "AHE1TAVA2UK5F", "AI3LZF99ECT58", "AHE1TAVA2UK5F", "A2VPVY1PY9H4T4", "A3TUNUJES9PQ5Q", "A1XCQTUCGFSG14", "AWCMWOLXMZAAC", "A3BDTPHXKVWQRG", "A3BG20JPQLNKE1", "A13YKCX7SYEXSU", "AI3LZF99ECT58", "AHE1TAVA2UK5F", "A3559VD53E2JYY", "A1LLBT92I9VVCQ", "A20XPARTTWNNK2", "A38IPIPA3T3G4", "A2S591ZMEWMA5C", "A2WQT33K6LD9Z5", "A39VVWV1GHLMFD", "AYIFHDQSXQJ6B", "A2DEYXKCEOJQJU", "A13YTGRLTS80MU", "A5U517WO9A7MD"] # A38IPIPA3T3G4 is white
-	rejected_workers = 0
-	approved_column = []
-	rejected_column = []
-	rejections = [["Reason for rejection", "Worker", "Task duration"]]
-
-	normalized_worktimes, minimum_worktime = get_minimum_worktime()
-	for index, worker_data in input_data.iterrows():
-
-		worker_id = worker_data["WorkerId"]
-		worktime = worker_data["WorkTimeInSeconds"]
+	def _demographics_complete(self, worker_data):
+		# Verify whether each demographic element has an answer, i.e. one True value per element options.
 		
-		# Too short time spent
-		if worktime/len(worker_data["Input.biography"].split()) < minimum_worktime:
-			reason = f"You spend an unreasonably short amount of time on the task ({worktime} seconds) compared to other workers. As mentioned in the instructions, this is grounds for rejection."
-			rejections.append([reason, worker_id, worktime])
-			rejected_workers += 1
-			rejected_column.append(reason)
-			approved_column.append("")
+		demographic_columns = {
+			"age": ['Answer.age.30', 'Answer.age.older', 'Answer.age.younger'], #, 
+			"gender": ['Answer.gender.female', 'Answer.gender.male', 'Answer.gender.other'],
+			"race": ['Answer.race.american_indian','Answer.race.asian', 'Answer.race.black', 
+				'Answer.race.hispanic', 'Answer.race.other', 'Answer.race.white']
+		}
 
-		else:
-			# Reject based on demographics
-			verification, reason = verify_demographics(worker_data)
-			if worker_data["WorkerId"] in preapproved_workers: verification = True
-			if not verification:
-				rejections.append([reason, worker_id, worktime])
-				rejected_workers += 1
-				rejected_column.append(reason)
-				approved_column.append("")
-				
-			# Reject based on task incompletion
+		for demographic_element in demographic_columns:
+			if not True in [worker_data[column] for column in demographic_columns[demographic_element]]:
+				reason = f"missing {demographic_element}"
+				return False, reason
+		
+		if not worker_data["Answer.typed_age"]:
+			reason = "missing typed age"
+			return False, reason
+
+		return True, ""
+		
+	def _get_worker_demographics(self, worker_data): # race_division = binary or all
+		# Make worker demographics dictionary
+		demographics = {
+			"age": None,
+			"agegroup": None,
+			"gender": None,
+			"race": None
+		}
+		
+		# Age
+		demographics["age"] = worker_data['Answer.typed_age']
+
+		if worker_data[f'Answer.age.older']:
+			demographics["agegroup"] = "older than 30"
+		elif worker_data[f'Answer.age.younger']:
+			demographics["agegroup"] = "younger than 30"
+		elif worker_data[f'Answer.age.30']:
+			demographics["agegroup"] = "30"
+
+		# Gender
+		for gender in ['female', 'male', 'other']:
+			if worker_data[f'Answer.gender.{gender}']:
+				demographics["gender"] = gender
+
+		# Race
+		for race in ['white', 'black', 'asian', 'american_indian','hispanic', 'other']:
+			if worker_data[f'Answer.race.{race}']:
+				demographics["race"] = race
+		return demographics
+
+	def _make_demographics_dict(self):
+		for index, worker_data in self.data.iterrows():
+
+			demographics = self._get_worker_demographics(worker_data)
+			if None in demographics.values(): continue
+			self.demographics_dict[worker_data["WorkerId"]] = demographics	
+
+	def _verify_demographics(self, worker_id): #data):
+		# Verify that the demographics are complete and have no discrepancies. 
+		# Return True (verified) or False (rejected).
+		# Reject worker if incomplete demographics
+		# complete, reason = self._demographics_complete(worker_data)
+		# if not complete:
+			
+		if worker_id not in self.demographics_dict.keys(): 
+			print("Worker not in demographics dict:\t", worker_id)
+			return False, f"Incomplete demographics."
+
+		verified = True
+		reason = ""
+
+		# Reject worker if discrepancies in age:
+		age = self.demographics_dict[worker_id]["age"]
+		if age == 3030: age = 30
+		agegroup = self.demographics_dict[worker_id]["agegroup"]
+
+		if ( age > 30 and agegroup != "older than 30" or
+			 age < 30 and agegroup != "younger than 30" or
+			 age == 30 and agegroup != "30" ):
+			reason = f"Discrepancies in age. You put that you are {agegroup}, but typed that you are {age}."
+			verified = False
+
+		return verified, reason
+
+	def _verify_task_completion(self, worker_data):
+		# Verify whether each task element has an answer, i.e. one True value per element options.
+		for task_element in ["informative", "fluent", "useful"]:
+			for letter in ["A", "B"]:
+				if not True in [worker_data[f'Answer.{task_element}_{letter}.{num}'] for num in range(4)]:
+					reason = f"You did not rate the element '{task_element}' for summary {letter}."
+					return False, reason
+
+		if not True in [worker_data[f'Answer.summary_preference.{letter}'] for letter in ["a", "b", "non"]]:
+			reason = "Missing summary preference entry."
+			return False, reason
+
+		return True, ""
+
+	def _get_minimum_worktime(self):
+		# Get average normalized worktime, and standard deviation. 
+		# Used to exclude workers who spend too little time on task.
+		self.normalized_worktimes = {}
+		
+		for index, worker_data in self.data.iterrows():
+			time = worker_data["WorkTimeInSeconds"]
+			words = len(worker_data["Input.biography"].split()) #+len(worker_data["Input.summary_A"].split())+len(worker_data["Input.summary_B"].split())
+			normalized_worktime = time/words
+			self.normalized_worktimes[f"{worker_data['WorkerId']}_{index}"] = normalized_worktime
+
+		average = sum(self.normalized_worktimes.values())/len(self.normalized_worktimes)
+		standard_deviation = stdev(list(self.normalized_worktimes.values()))
+		self.minimum_worktime = average-(0.5*standard_deviation)
+
+	def _do_rejection(self, reason, worker_id, task_id, worktime):
+		self.rejections.append([reason, worker_id, task_id, worktime])
+		self.rejected_assignments += 1
+		self.rejected_column.append(reason+self.justification)
+		self.approved_column.append("")
+
+	def main(self):
+		# Review and approve/reject assignments based on time spent on assignment and complete demographics.
+
+		preapproved_workers = []
+		for index, worker_data in self.data.iterrows():
+
+			worker_id = worker_data["WorkerId"]
+			task_id = worker_data["HITId"]
+			worktime = worker_data["WorkTimeInSeconds"]
+			
+			# Too short time spent
+			if self.normalized_worktimes[f"{worker_id}_{index}"] < self.minimum_worktime:
+				reason = f"You spend an unreasonably short amount of time on the task ({worktime} seconds) compared to other workers and the length of the texts."
+				self._do_rejection(reason, worker_id, task_id, worktime)
+
 			else:
-				verification, reason = verify_task_completion(worker_data)
+				# Reject based on demographics
+				verification, reason = self._verify_demographics(worker_id) #worker_data)
 				if not verification:
-					rejections.append([reason, worker_id, worktime])
-					rejected_workers += 1
-					rejected_column.append(reason)
-					approved_column.append("")
+					self._do_rejection(reason, worker_id, task_id, worktime)
+					
+				# Reject based on task incompletion
 				else:
-					# Approve the rest
-					reason = ""
-					rejected_column.append("")
-					approved_column.append("x")
-		if worker_id in ["A5U517WO9A7MD"]:
-			print(worker_id, reason)
+					verification, reason = self._verify_task_completion(worker_data)
+					if not verification:
+						self._do_rejection(reason, worker_id, task_id, worktime)
+					else:
+						# Approve the rest
+						reason = ""
+						self.rejected_column.append("")
+						self.approved_column.append("x")
 
-	input_data["Approve"] = approved_column
-	input_data["Reject"] = rejected_column
-	input_data.to_csv(f"data/mturk_results/reviewed/{sys.argv[1]}_reviewed.csv", index=False)
+		self.data["Approve"] = self.approved_column
+		self.data["Reject"] = self.rejected_column
+		self.data.to_csv(f"data/mturk/output/reviewed/{sys.argv[1]}.csv", index=False)
 
-	#print(tabulate(rejections))
-	print("Number of rejected tasks:\t", rejected_workers)
+		print()
+		print(tabulate(self.rejections))
+		print(f"Number of rejected assignments:\t{self.rejected_assignments} ({self.rejected_assignments/self.total_assignments})")
+		print()
 
-	print("\nBE CAREFUL: the MTurk setup now allows for several results from the same worker and they do not have to fill in demo more than once.")	
 if __name__ == "__main__":
-	main()
+	data = pd.read_csv(f"data/mturk/output/raw/{sys.argv[1]}.csv", sep=",")
+	ReviewAssignments(data).main()

@@ -102,7 +102,6 @@ class Bootstrapping():
 			
 			print(f"\nComparisons in {demographic_class}")
 			comparison_data = {}
-			n_interest_groups = 0
 
 			for interest_group in self.demographic_representations[demographic_class]:
 				interest_group_preferences, rest_preferences = self._get_group_preferences(interest_group)

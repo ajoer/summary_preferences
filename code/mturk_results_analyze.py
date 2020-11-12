@@ -1,5 +1,6 @@
 import argparse
 import copy
+import glob
 import json
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -330,8 +331,8 @@ class AnalyzeMTurkData():
 
 if __name__ == "__main__":
 
-	mturk_data = pd.read_csv("data/mturk/output/reviewed/Batch_4235328_batch_results_reviewed.csv")
-
+	input_data = [ pd.read_csv(file) for file in glob.glob("data/mturk/output/reviewed/Batch*") ] 
+	mturk_data = pd.concat(input_data, ignore_index=True)
 	a = AnalyzeMTurkData(mturk_data, race_division="all") # race_division = all or binary
 	a.make_demographics_dict() 
 
