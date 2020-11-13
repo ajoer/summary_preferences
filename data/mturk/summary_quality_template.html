@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1671.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!-- You must include this JavaScript file --&gt;</p>
+<p class="p1">&lt;script src="https://assets.crowd.aws/crowd-html-elements.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- For the full list of available Crowd HTML Elements and their input/output documentation,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- You must include crowd-form so that your task submits answers to MTurk --&gt;</p>
+<p class="p1">&lt;crowd-form answer-format="flatten-objects"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Summary ratings&lt;/h1&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Instructions&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;In this task, we will ask you to read a biography and two summaries of that biography.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>We will then ask you which of two summaries you prefer,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>and we will ask you to rate the two biographies based on their informativeness, fluency and usefulness.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;strong&gt;Please read the entire biography as well as the two summaries&lt;/strong&gt;,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>even if you are already familiar with the person about whom the biography is written.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>We are interested in your evaluation of the summaries of that text, not what you may already know about the person.&lt;/p&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;We assign 5 minutes to complete each assignment.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>The time allocation is based on average reading speeds and the cognitive load of the tasks.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;strong&gt;We will regard your answers as invalid if you complete the assignment in an<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>unreasonably short amount of time&lt;/strong&gt;. The cut-off will be dependent on the length of the texts.&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;You can complete as many summary rating tasks as you want.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>You will be paid for the number of tasks you &lt;strong&gt;complete&lt;/strong&gt;.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>If you leave a question unanswered, the task is incomplete, and you will not be paid for that task.&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Afterwards, we will ask you four questions about who you are.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>If there are &lt;strong&gt;discrepancies&lt;/strong&gt; in your answers to the demographic questions,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>we will exclude you from the experiment, and you will not be paid.</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;strong&gt;Please note that:&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;There is no advantage in answering the demographic questions in a certain way.&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;We do not exclude people from completing the tasks based on their demographic information.&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;We pay everyone equally independent of their demographic information.&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;There is no need to answer the demographic questions more than once.&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Summary ratings&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Please read the biography and the two summaries carefully before answering the questions.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Biography of ${person}:&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;${biography}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Summary A:&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;${summary_A}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Summary B:&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;${summary_B}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;Do you prefer &lt;strong&gt;summary A&lt;/strong&gt; or &lt;strong&gt;summary B&lt;/strong&gt;?&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;label for="a"&gt;&lt;input type="radio" id="a" name="summary_preference" value="a" /&gt;A&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;label for="b"&gt;&lt;input type="radio" id="b" name="summary_preference" value="b" /&gt;B&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;label for="non"&gt;&lt;input type="radio" id="non" name="summary_preference" value="non" /&gt;They are exactly the same&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;strong&gt;Summary A is:&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt; Informative:&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="0"&gt;&lt;input type="radio" id="0" name="informative_A" value="0" /&gt;strongly agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="1"&gt;&lt;input type="radio" id="1" name="informative_A" value="1" /&gt;agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="2"&gt;&lt;input type="radio" id="2" name="informative_A" value="2" /&gt;disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="3"&gt;&lt;input type="radio" id="3" name="informative_A" value="3" /&gt;strongly disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt; Fluent:&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="0"&gt;&lt;input type="radio" id="0" name="fluent_A" value="0" /&gt;strongly agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="1"&gt;&lt;input type="radio" id="1" name="fluent_A" value="1" /&gt;agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="2"&gt;&lt;input type="radio" id="2" name="fluent_A" value="2" /&gt;disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="3"&gt;&lt;input type="radio" id="3" name="fluent_A" value="3" /&gt;strongly disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt; Useful:&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="0"&gt;&lt;input type="radio" id="0" name="useful_A" value="0" /&gt;strongly agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="1"&gt;&lt;input type="radio" id="1" name="useful_A" value="1" /&gt;agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="2"&gt;&lt;input type="radio" id="2" name="useful_A" value="2" /&gt;disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="3"&gt;&lt;input type="radio" id="3" name="useful_A" value="3" /&gt;strongly disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;strong&gt;Summary B is:&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt; Informative:&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="0"&gt;&lt;input type="radio" id="0" name="informative_B" value="0" /&gt;strongly agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="1"&gt;&lt;input type="radio" id="1" name="informative_B" value="1" /&gt;agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="2"&gt;&lt;input type="radio" id="2" name="informative_B" value="2" /&gt;disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="3"&gt;&lt;input type="radio" id="3" name="informative_B" value="3" /&gt;strongly disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt; Fluent:&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="0"&gt;&lt;input type="radio" id="0" name="fluent_B" value="0" /&gt;strongly agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="1"&gt;&lt;input type="radio" id="1" name="fluent_B" value="1" /&gt;agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="2"&gt;&lt;input type="radio" id="2" name="fluent_B" value="2" /&gt;disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="3"&gt;&lt;input type="radio" id="3" name="fluent_B" value="3" /&gt;strongly disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt; Useful:&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="0"&gt;&lt;input type="radio" id="0" name="useful_B" value="0" /&gt;strongly agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="1"&gt;&lt;input type="radio" id="1" name="useful_B" value="1" /&gt;agree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="2"&gt;&lt;input type="radio" id="2" name="useful_B" value="2" /&gt;disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="3"&gt;&lt;input type="radio" id="3" name="useful_B" value="3" /&gt;strongly disagree&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Demographic Information&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;strong&gt;Only answer these if you have not yet done so at any point during this assignment!&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;strong&gt;1) What gender do you identify as?&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="male"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="radio" id="male" name="gender" value="male" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Male</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="female"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="radio" id="female" name="gender" value="female" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Female</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="other"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="radio" id="other" name="gender" value="other" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Non-binary</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;strong&gt;2) Are you older than 30 years old?&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="younger"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="younger" name="age" value="younger" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>No, I am younger than 30</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="30"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="30" name="age" value="30" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>I am &lt;strong&gt;exactly&lt;/strong&gt; 30 years old</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="older"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="older" name="age" value="older" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Yes, I am older than 30</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;strong&gt;3) What is your age?&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="typed_age"&gt;Age:&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="text" id="typed_age" name="typed_age" value=""&gt;&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;strong&gt;4) What race do you identify as?&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="hispanic"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="hispanic" name="race" value="hispanic" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Hispanic&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="black"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="black" name="race" value="black" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Black&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="asian"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="asian" name="race" value="asian" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Asian&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="american_indian"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="american_indian" name="race" value="american_indian" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>American Indian&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="white"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="white" name="race" value="white" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>White&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="other"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="radio" id="other" name="race" value="other" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Other&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/crowd-form&gt;</p>
+</body>
+</html>
