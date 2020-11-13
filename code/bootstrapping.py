@@ -64,7 +64,6 @@ class Bootstrapping():
 				rest_preferences.append(self.biography_representations[person]["summary_preference"])
 		if len(interest_group_preferences) < 20: 
 			return None, None
-		print(interest_group, len(interest_group_preferences))
 		return interest_group_preferences, rest_preferences
 
 	def _bootstrap(self, comparison_data, interest_group, total_comparisons):
@@ -114,9 +113,9 @@ class Bootstrapping():
 				}
 
 			total_comparisons = sum(list(range(1, len(comparison_data.keys()))))
-			for interest_group in comparison_data:
-				self._bootstrap(comparison_data[interest_group], interest_group, total_comparisons)
+			# for interest_group in comparison_data:
+			# 	self._bootstrap(comparison_data[interest_group], interest_group, total_comparisons)
 
 if __name__ == "__main__":
-   	biography_representations = json.load(open("analyses/all/biography_representations.json"))
+	biography_representations = json.load(open("analyses/all/biography_representations.json"))
 	Bootstrapping(biography_representations).compare_demographic_groups()

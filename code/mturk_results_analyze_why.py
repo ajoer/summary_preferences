@@ -2,9 +2,11 @@ import json
 import nltk 
 import nltk.data
 import numpy as np
+import operator
 import re
 import textstat
 
+from matplotlib import pyplot
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -16,9 +18,38 @@ from sklearn.preprocessing import StandardScaler
 class MakeVectors():
 	def __init__(self, biography_representations):
 		self.biography_representations = biography_representations
-		self.data = {"X": [], "Y": []}
+		self.data = {
+			"over30": {"X": [], "Y": []}, 
+			"american_indian": {"X": [], "Y": []}, 
+			"male/white": {"X": [], "Y": []}, 
+			"female/american_indian": {"X": [], "Y": []},
+			"male/over30": {"X": [], "Y": []},
+			"asian/under30": {"X": [], "Y": []},
+			"male/asian/under30": {"X": [], "Y": []}, 
+			"male/white/over30": {"X": [], "Y": []}, 
+			"female/american_indian/over30": {"X": [], "Y": []}
+		}
 
-	# ======================= Vector representation ===============
+	def _get_representations(self, demographics):
+
+		representations = []
+		for element in sorted(demographics):
+			first_level = demographics[element]
+			if first_level in self.data:
+				representations.append(first_level)
+
+			for element2 in sorted(demographics):
+				second_level = f"{demographics[element]}/{demographics[element2]}"
+				if second_level in self.data:
+					representations.append(second_level)
+
+		third_level = f"{demographics['gender']}/{demographics['race']}/{demographics['agegroup']}"
+		if third_level in self.data:
+			representations.append(third_level)
+
+		return representations
+
+
 	def _clean_text(self, text):
 		# remove additional spaces:
 		text = re.sub(' +', ' ', text)
@@ -68,11 +99,15 @@ class MakeVectors():
 
 		return vector
 
+
 	def make_vector_representations(self):
 		# Make vector representation for each summary pair.
 
 		print("Making vector representations")
 		for br in self.biography_representations:
+			demographics = self.biography_representations[br]["demographics"]
+
+			representations = self._get_representations(demographics)
 			
 			biography = self._clean_text(self.biography_representations[br]["biography"])
 			textrank = self._clean_text(self.biography_representations[br]["textrank"])
@@ -90,10 +125,12 @@ class MakeVectors():
 
 			else: continue # if preference == 'neither'
 
-			self.data["Y"].append(y)
-			self.data["X"].append(vector_representation)
+			for rep in representations:
+				self.data[rep]["Y"].append(y)
+				self.data[rep]["X"].append(vector_representation)
 
-		assert(len(self.data["Y"]) == len(self.data["X"]))
+		for rep in self.data:
+			assert(len(self.data[rep]["Y"]) == len(self.data[rep]["X"]))
 
 		return self.data
 
@@ -102,27 +139,53 @@ class TextClassification():
 
 		print("Starting text classification")
 		self.input_data = data
-		self._split_data()
+
 		self.main()
 
-	def _split_data(self):
-		
-		scaler = StandardScaler()
-		self.input_data["X"] = scaler.fit_transform(self.input_data["X"])
+	def _split_data(self, data):
 
-		split = int(round(len(self.input_data["X"])*0.2,0))
-		self.classification_data = {
-			"train_X": self.input_data["X"][split:], 
-			"train_Y": self.input_data["Y"][split:], 
-			"test_X": self.input_data["X"][:split], 
-			"test_Y": self.input_data["Y"][:split]
+		scaler = StandardScaler()
+		data["X"] = scaler.fit_transform(data["X"])
+
+		split = int(round(len(data["X"])*0.2,0))
+		classification_data = {
+			"train_X": data["X"][split:], 
+			"train_Y": data["Y"][split:], 
+			"test_X": data["X"][:split], 
+			"test_Y": data["Y"][:split]
 		}
+		return classification_data
 
 	def main(self):
-		clf = LogisticRegression(random_state=0, max_iter=1000).fit(self.classification_data["train_X"], self.classification_data["train_Y"])
-		print("Done fitting")
-		print(clf.score(self.classification_data["test_X"], self.classification_data["test_Y"]))
+		for rep in self.input_data:
+			print(f"--------- {rep} ---------")
+			classification_data = self._split_data(self.input_data[rep])
+			clf = LogisticRegression(random_state=0, max_iter=1000).fit(classification_data["train_X"], classification_data["train_Y"])
+			print("Score:\t", clf.score(classification_data["test_X"], classification_data["test_Y"]))
 
+			importance = clf.coef_
+			indexed = list(enumerate(importance[0])) # attach indices to the list
+			top_20 = list(reversed([i for i, v in sorted(indexed, key=operator.itemgetter(1))[:20]]))
+			top20_features = []
+			non_stop_words = {
+				"146": "average_word_length",
+				"147": "first_sentence_included",
+				"148": "type_token",
+				"149": "text_complexity"
+			}
+
+			vocab = stopwords.words('english')
+		
+			for index in top_20:
+				if index > 150: model = "m"
+				else: model = "t"
+
+				index=index-149
+
+				if str(index) in non_stop_words: feature = f"{model}_{non_stop_words[str(index)]}"
+				else: feature = f"{model}_{vocab[index]}"				
+				top20_features.append(feature)
+			print(top20_features)
 			
 def main(biography_representations):
 	data = MakeVectors(biography_representations).make_vector_representations()
