@@ -1,18 +1,18 @@
 \begin{tabular}{lll}
 \hline
  Demographics           & Count & Percentage \\
- female/american\_indian & 39    & 2.0        \\
- female/asian           & 10    & 0.5        \\
- female/black           & 170   & 8.8        \\
- female/hispanic        & 7     & 0.4        \\
- female/other           & 37    & 1.9        \\
- female/white           & 517   & 26.7       \\
- male/american\_indian   & 6     & 0.3        \\
- male/asian             & 58    & 3.0        \\
- male/black             & 201   & 10.4       \\
- male/hispanic          & 32    & 1.7        \\
- male/other             & 6     & 0.3        \\
- male/white             & 855   & 44.1       \\
- Total                  & 1938  & 100.0      \\
+ female/american\_indian & 51    & 1.8        \\
+ female/asian           & 15    & 0.5        \\
+ female/black           & 201   & 7.2        \\
+ female/hispanic        & 9     & 0.3        \\
+ female/other           & 38    & 1.4        \\
+ female/white           & 705   & 25.1       \\
+ male/american\_indian   & 18    & 0.6        \\
+ male/asian             & 61    & 2.2        \\
+ male/black             & 296   & 10.6       \\
+ male/hispanic          & 43    & 1.5        \\
+ male/other             & 7     & 0.2        \\
+ male/white             & 1360  & 48.5       \\
+ Total                  & 2804  & 100.0      \\
 \hline
 \end{tabular}
