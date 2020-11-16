@@ -32,7 +32,8 @@ from tabulate import tabulate
 class AnalyzeMTurkData():
 
 	def __init__(self, mturk_data, race_division):
-		self.data = mturk_data[mturk_data.Approve == "x"]
+
+		self.data = mturk_data
 		self.biography_representations = {}
 		self.race_division = race_division
 
@@ -66,6 +67,7 @@ class AnalyzeMTurkData():
 
 		#if args.gender != "both": self.get_gendered_data(args.gender)
 
+		self.data = self.data[self.data.Approve == "x"]
 		total = len(self.data)
 		self.main()
 		
@@ -363,33 +365,32 @@ class AnalyzeMTurkData():
 		# Get tables of preferences and ratings.
 
 		for index, worker_data in self.data.iterrows():
-
 			try:
 				demographics = self.demographics_dict[worker_data["WorkerId"]]
 			except KeyError:
 				continue
 
-			annotations = self.get_preferences(worker_data)
+		# 	annotations = self.get_preferences(worker_data)
 
-			# make ratings overviews for all and for each demo group.
-			self.add_annotations(demographics, annotations)
+		# 	# make ratings overviews for all and for each demo group.
+		# 	self.add_annotations(demographics, annotations)
 
-			# Make dictionary with demographics of the Turker, and the texts for deeper analysis.
-			self.biography_representations[f"{worker_data['Input.person']}_{worker_data['WorkerId']}_{worker_data['HITId']}"] = {
-				"person": worker_data['Input.person'],
-				"demographics": demographics,
-				"summary_preference": annotations["summary"],
-				"biography": f"{worker_data['Input.biography']}",
-				f"{worker_data['Input.summary_A_model']}": f"{worker_data['Input.summary_A']}",
-				f"{worker_data['Input.summary_B_model']}": f"{worker_data['Input.summary_B']}"
-			}
+		# 	# Make dictionary with demographics of the Turker, and the texts for deeper analysis.
+		# 	self.biography_representations[f"{worker_data['Input.person']}_{worker_data['WorkerId']}_{worker_data['HITId']}"] = {
+		# 		"person": worker_data['Input.person'],
+		# 		"demographics": demographics,
+		# 		"summary_preference": annotations["summary"],
+		# 		"biography": f"{worker_data['Input.biography']}",
+		# 		f"{worker_data['Input.summary_A_model']}": f"{worker_data['Input.summary_A']}",
+		# 		f"{worker_data['Input.summary_B_model']}": f"{worker_data['Input.summary_B']}"
+		# 	}
 
-		self.get_small_representations()
-		self.print_preferences()
-		self.print_ratings()
+		# self.get_small_representations()
+		# self.print_preferences()
+		# self.print_ratings()
 
-		with open(f"analyses/{self.race_division}/biography_representations.json", "w") as outfile:
-			json.dump(self.biography_representations, outfile, sort_keys=True, indent=4,)
+		# with open(f"analyses/{self.race_division}/biography_representations.json", "w") as outfile:
+		# 	json.dump(self.biography_representations, outfile, sort_keys=True, indent=4,)
 
 if __name__ == "__main__":
 

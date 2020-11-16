@@ -11,9 +11,6 @@ from tabulate import tabulate
 
 	Checks the following:
 
-	ID:
-	0) check that all workers are unique
-
 	demographics:
 	1) check for each worker whether they have filled in the demographic information at least once.
 	2) check for each worker whether there are any discrepancies in the demographic information.
@@ -113,6 +110,8 @@ class ReviewAssignments():
 		verified = True
 		reason = ""
 
+		if worker_id == "AYIFHDQSXQJ6B":
+			print(self.demographics_dict[worker_id])
 		# Reject worker if discrepancies in age:
 		age = self.demographics_dict[worker_id]["age"]
 		if age == 3030: age = 30
@@ -123,6 +122,9 @@ class ReviewAssignments():
 			 age == 30 and agegroup != "30" ):
 			reason = f"Discrepancies in age. You put that you are {agegroup}, but typed that you are {age}."
 			verified = False
+
+		if worker_id == "AYIFHDQSXQJ6B":
+			print(self.demographics_dict[worker_id]["age"], self.demographics_dict[worker_id]["agegroup"])
 
 		return verified, reason
 
@@ -165,18 +167,13 @@ class ReviewAssignments():
 	def main(self):
 		# Review and approve/reject assignments based on time spent on assignment and complete demographics.
 
-		preapproved_workers = []
+		preapproved_workers = ["AYIFHDQSXQJ6B"]
 		for index, worker_data in self.data.iterrows():
 
 			worker_id = worker_data["WorkerId"]
 			task_id = worker_data["HITId"]
 			worktime = worker_data["WorkTimeInSeconds"]
 			
-			if worker_id == "A11EBMORZXLJJJ":
-				words = len(worker_data["Input.biography"].split())+432
-				print("worktime", worktime)
-				print("words", words)
-				print(worktime/words)
 
 			# Too short time spent
 			if self.normalized_worktimes[f"{worker_id}_{index}"] < self.minimum_worktime:
