@@ -1,0 +1,8 @@
+\begin{tabular}{lll}
+\hline
+ Demographics & Count & Percentage \\
+ over30       & 1760  & 62.8       \\
+ under30      & 1044  & 37.2       \\
+ Total        & 2804  & 100.0      \\
+\hline
+\end{tabular}
