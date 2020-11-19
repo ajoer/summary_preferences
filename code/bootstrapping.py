@@ -15,8 +15,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 """
 
 class Bootstrapping():
-	def __init__(self, biography_representations):
+	def __init__(self, biography_representations, gender, race_division):
 		self.biography_representations = biography_representations
+		self.gender = gender
+		self.race_division = race_division
 		self.demographic_representations = {
 			"agegroup": [],
 			"gender": [],
@@ -92,30 +94,42 @@ class Bootstrapping():
 		for group in won_rounds:
 			won_rounds[group] = won_rounds[group]/rounds
 
+
 		if bonferroni_cutoff > won_rounds[interest_group] or won_rounds[interest_group] > (100-bonferroni_cutoff):
-			print(f"Significant result between {interest_group} and the rest:\t{won_rounds[interest_group]}/{won_rounds['rest']} (Bonferroni = {bonferroni_cutoff}, {total_comparisons} comparisons)") 
+			score = won_rounds[interest_group]/won_rounds['rest']
+			return True, score, bonferroni_cutoff
+		else:
+			return False, 0, 0
 
 	def compare_demographic_groups(self):
 		self._get_demographic_groups()
 
-		for demographic_class in self.demographic_representations:
-			
-			print(f"\nComparisons in {demographic_class}")
-			comparison_data = {}
+		with open(f'analyses/{self.race_division}/{self.gender}/bonferroni.tsv', 'w') as f:
 
-			for interest_group in self.demographic_representations[demographic_class]:
-				interest_group_preferences, rest_preferences = self._get_group_preferences(interest_group)
-				if interest_group_preferences == None: 
-					continue
-				comparison_data[interest_group] = {
-					"interest_group_preferences": interest_group_preferences,
-					"rest_preferences": rest_preferences
-				}
+			f.write("demographic_group\tpvalue\tbonferroni_cutoff\t#comparisons\n")
 
-			total_comparisons = sum(list(range(1, len(comparison_data.keys()))))
-			# for interest_group in comparison_data:
-			# 	self._bootstrap(comparison_data[interest_group], interest_group, total_comparisons)
+			for demographic_class in self.demographic_representations:
+				
+				comparison_data = {}
+
+				for interest_group in self.demographic_representations[demographic_class]:
+					interest_group_preferences, rest_preferences = self._get_group_preferences(interest_group)
+					if interest_group_preferences == None: 
+						continue
+					comparison_data[interest_group] = {
+						"interest_group_preferences": interest_group_preferences,
+						"rest_preferences": rest_preferences
+					}
+
+				total_comparisons = sum(list(range(1, len(comparison_data.keys()))))
+				for interest_group in comparison_data:
+					result, score, bonferroni_cutoff = self._bootstrap(comparison_data[interest_group], interest_group, total_comparisons)
+					if result == True:
+						f.write(f"{interest_group}\t{score}\t{bonferroni_cutoff}\t{total_comparisons}\n")
 
 if __name__ == "__main__":
-	biography_representations = json.load(open("analyses/all/biography_representations.json"))
-	Bootstrapping(biography_representations).compare_demographic_groups()
+	for gender in ['both', 'men', 'women']: # both, men or women
+		for race_division in ['all', 'binary']: # all or binary (white/rest)
+			print(f"\nRunning bootstrapping for {gender}")
+			biography_representations = json.load(open(f"analyses/{race_division}/{gender}/biography_representations.json"))
+			Bootstrapping(biography_representations, gender, race_division).compare_demographic_groups()
