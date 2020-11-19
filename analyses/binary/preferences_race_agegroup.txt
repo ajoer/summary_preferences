@@ -1,9 +1,0 @@
-\begin{tabular}{lllllll}
-\hline
- Demographics     & TextRank & \%    & MatchSum & \%    & neither & \%    \\
- nonwhite/over30  & 18       & 28.6 & 45       & 71.4 & 0       & 0.0  \\
- nonwhite/under30 & 53       & 41.4 & 59       & 46.1 & 16      & 12.5 \\
- white/over30     & 248      & 40.2 & 315      & 51.1 & 54      & 8.8  \\
- white/under30    & 75       & 43.6 & 92       & 53.5 & 5       & 2.9  \\
-\hline
-\end{tabular}

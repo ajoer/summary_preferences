@@ -1,0 +1,10 @@
+\begin{tabular}{lllllll}
+\hline
+              & Informative &          & Useful   &          & Fluent   &          \\
+ Demographics & TextRank    & MatchSum & TextRank & MatchSum & TextRank & MatchSum \\
+ 0            & 0.3         & 0.37     & 0.39     & 0.44     & 0.33     & 0.37     \\
+ 1            & 0.55        & 0.53     & 0.48     & 0.47     & 0.51     & 0.53     \\
+ 2            & 0.11        & 0.08     & 0.11     & 0.08     & 0.13     & 0.08     \\
+ 3            & 0.04        & 0.03     & 0.02     & 0.01     & 0.03     & 0.02     \\
+\hline
+\end{tabular}

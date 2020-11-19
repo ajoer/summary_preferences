@@ -1,9 +1,0 @@
-\begin{tabular}{lllllll}
-\hline
- Demographics    & TextRank & \%    & MatchSum & \%    & neither & \%   \\
- female/nonwhite & 107      & 38.6 & 151      & 54.5 & 19      & 6.9 \\
- female/white    & 223      & 44.3 & 246      & 48.9 & 34      & 6.8 \\
- male/nonwhite   & 159      & 46.4 & 168      & 49.0 & 16      & 4.7 \\
- male/white      & 321      & 39.4 & 419      & 51.4 & 75      & 9.2 \\
-\hline
-\end{tabular}

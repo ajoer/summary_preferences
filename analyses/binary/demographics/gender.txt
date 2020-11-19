@@ -1,8 +1,0 @@
-\begin{tabular}{lll}
-\hline
- Demographics & Count & Percentage \\
- female       & 780   & 40.2       \\
- male         & 1158  & 59.8       \\
- Total        & 1938  & 100.0      \\
-\hline
-\end{tabular}

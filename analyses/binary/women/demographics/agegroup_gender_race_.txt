@@ -1,0 +1,14 @@
+\begin{tabular}{lll}
+\hline
+ Demographics            & Count & Percentage \\
+ female/nonwhite/over30  & 114   & 4.1        \\
+ female/nonwhite/under30 & 215   & 7.7        \\
+ female/white/over30     & 574   & 20.5       \\
+ female/white/under30    & 117   & 4.2        \\
+ male/nonwhite/over30    & 78    & 2.8        \\
+ male/nonwhite/under30   & 392   & 14.0       \\
+ male/white/over30       & 981   & 35.0       \\
+ male/white/under30      & 334   & 11.9       \\
+ Total                   & 2805  & 100.0      \\
+\hline
+\end{tabular}
