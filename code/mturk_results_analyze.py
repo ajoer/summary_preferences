@@ -31,11 +31,12 @@ from tabulate import tabulate
 
 class AnalyzeMTurkData():
 
-	def __init__(self, mturk_data, race_division):
+	def __init__(self, mturk_data, race_division, gender):
 
 		self.data = mturk_data
 		self.biography_representations = {}
 		self.race_division = race_division
+		self.gender = gender
 
 		self.demographics_distribution = {
 			"agegroup": Counter(),
@@ -58,17 +59,21 @@ class AnalyzeMTurkData():
 		self.preferences = copy.deepcopy(self.ratings)
 		
 		self.demographics_dict = {}
-		#self.ages = Counter()
 		self.worker_counter = Counter()
 
 		self.make_demographics_dict()
 		self.make_demographics_distribution()
 		self.make_demographics_table()
 
-		#if args.gender != "both": self.get_gendered_data(args.gender)
+		print(f"There are a total of {self.data.shape[0]} reviews before filtering")
+
+		if self.gender != "both":
+			self.get_gendered_data(self.gender)
+			print(f"There are a total of {self.data.shape[0]} reviews in the {self.gender} data")
 
 		self.data = self.data[self.data.Approve == "x"]
-		total = len(self.data)
+		print(f"There are a total of {self.data.shape[0]} reviews after filtering")
+
 		self.main()
 		
 
@@ -79,9 +84,6 @@ class AnalyzeMTurkData():
 			"gender": None,
 			"race": None
 		}
-		
-		# Age
-		#demographics["age"] = worker_data['Answer.typed_age']
 
 		if worker_data[f'Answer.age.older']:
 			demographics["agegroup"] = "over30"
@@ -180,7 +182,7 @@ class AnalyzeMTurkData():
 
 			total = sum(self.demographics_distribution[demographic_class].values())
 			percentages = 0
-			with open(f'analyses/{self.race_division}/demographics/{demographic_class}.txt', 'w') as f:
+			with open(f'analyses/{self.race_division}/{self.gender}/demographics/{demographic_class}.txt', 'w') as f:
 				for representation in sorted(self.demographics_distribution[demographic_class]):
 					count = self.demographics_distribution[demographic_class][representation]
 					percentage = round(100*(count/total),1)
@@ -190,9 +192,8 @@ class AnalyzeMTurkData():
 				table.append(["Total", total, round(percentages,0)])
 				f.write(tabulate(table, tablefmt="latex"))
 
-
 	def get_gendered_data(self, gender):
-		# Make a subset of biographies that are just of one gender.
+		# Make a subset of biographies that are just of one gender (exclude persons from the other gender).
 
 		genders = ["women", "men"]
 		genders.remove(gender)
@@ -312,7 +313,7 @@ class AnalyzeMTurkData():
 			}
 			table = [["Demographics", "TextRank", "%", "MatchSum", "%", "neither", "%"]]
 
-			with open(f'analyses/{self.race_division}/preferences_{demographic_class}.txt', 'w') as f:
+			with open(f'analyses/{self.race_division}/{self.gender}/preferences_{demographic_class}.txt', 'w') as f:
 				for representation in sorted(self.preferences[demographic_class]):
 					if representation in self.too_small_representations: continue
 					representation_line = [representation]
@@ -334,7 +335,7 @@ class AnalyzeMTurkData():
 				["Demographics", "TextRank", "MatchSum", "TextRank", "MatchSum", "TextRank", "MatchSum"]
 			]
 
-			with open(f'analyses/{self.race_division}/ratings_{demographic_class}.txt', 'w') as f:
+			with open(f'analyses/{self.race_division}/{self.gender}/ratings_{demographic_class}.txt', 'w') as f:
 				for representation in sorted(self.percentage_ratings[demographic_class]):
 					representation_data = self.percentage_ratings[demographic_class][representation]
 					if representation in self.too_small_representations: continue
@@ -350,7 +351,7 @@ class AnalyzeMTurkData():
 			["Demographics", "TextRank", "MatchSum", "TextRank", "MatchSum", "TextRank", "MatchSum"]
 		]
 
-		with open(f'analyses/{self.race_division}/ratings_total.txt', 'w') as f:
+		with open(f'analyses/{self.race_division}/{self.gender}/ratings_total.txt', 'w') as f:
 			for value in ["0","1","2","3"]:
 				line = [value]
 				for element in sorted(self.ratings["gender"]["female"]["textrank"]):
@@ -370,32 +371,32 @@ class AnalyzeMTurkData():
 			except KeyError:
 				continue
 
-		# 	annotations = self.get_preferences(worker_data)
+			annotations = self.get_preferences(worker_data)
 
-		# 	# make ratings overviews for all and for each demo group.
-		# 	self.add_annotations(demographics, annotations)
+			# make ratings overviews for all and for each demo group.
+			self.add_annotations(demographics, annotations)
 
-		# 	# Make dictionary with demographics of the Turker, and the texts for deeper analysis.
-		# 	self.biography_representations[f"{worker_data['Input.person']}_{worker_data['WorkerId']}_{worker_data['HITId']}"] = {
-		# 		"person": worker_data['Input.person'],
-		# 		"demographics": demographics,
-		# 		"summary_preference": annotations["summary"],
-		# 		"biography": f"{worker_data['Input.biography']}",
-		# 		f"{worker_data['Input.summary_A_model']}": f"{worker_data['Input.summary_A']}",
-		# 		f"{worker_data['Input.summary_B_model']}": f"{worker_data['Input.summary_B']}"
-		# 	}
+			# Make dictionary with demographics of the Turker, and the texts for deeper analysis.
+			self.biography_representations[f"{worker_data['Input.person']}_{worker_data['WorkerId']}_{worker_data['HITId']}"] = {
+				"person": worker_data['Input.person'],
+				"demographics": demographics,
+				"summary_preference": annotations["summary"],
+				"biography": f"{worker_data['Input.biography']}",
+				f"{worker_data['Input.summary_A_model']}": f"{worker_data['Input.summary_A']}",
+				f"{worker_data['Input.summary_B_model']}": f"{worker_data['Input.summary_B']}"
+			}
 
-		# self.get_small_representations()
-		# self.print_preferences()
-		# self.print_ratings()
+		self.get_small_representations()
+		self.print_preferences()
+		self.print_ratings()
 
-		# with open(f"analyses/{self.race_division}/biography_representations.json", "w") as outfile:
-		# 	json.dump(self.biography_representations, outfile, sort_keys=True, indent=4,)
+		with open(f"analyses/{self.race_division}/{self.gender}/biography_representations.json", "w") as outfile:
+			json.dump(self.biography_representations, outfile, sort_keys=True, indent=4,)
 
 if __name__ == "__main__":
 
 	input_data = [ pd.read_csv(file) for file in glob.glob("data/mturk/output/reviewed/Batch*") ] 
 	mturk_data = pd.concat(input_data, ignore_index=True)
-	a = AnalyzeMTurkData(mturk_data, race_division="all") # race_division = all or binary
+	a = AnalyzeMTurkData(mturk_data, race_division="all", gender="women") # race_division = all or binary, gender = both or men or women
 	
 

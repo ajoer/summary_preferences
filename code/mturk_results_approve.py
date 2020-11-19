@@ -110,8 +110,6 @@ class ReviewAssignments():
 		verified = True
 		reason = ""
 
-		if worker_id == "AYIFHDQSXQJ6B":
-			print(self.demographics_dict[worker_id])
 		# Reject worker if discrepancies in age:
 		age = self.demographics_dict[worker_id]["age"]
 		if age == 3030: age = 30
@@ -164,16 +162,15 @@ class ReviewAssignments():
 		self.rejected_column.append(reason+self.justification)
 		self.approved_column.append("")
 
+
 	def main(self):
 		# Review and approve/reject assignments based on time spent on assignment and complete demographics.
 
-		preapproved_workers = ["AYIFHDQSXQJ6B"]
 		for index, worker_data in self.data.iterrows():
 
 			worker_id = worker_data["WorkerId"]
 			task_id = worker_data["HITId"]
 			worktime = worker_data["WorkTimeInSeconds"]
-			
 
 			# Too short time spent
 			if self.normalized_worktimes[f"{worker_id}_{index}"] < self.minimum_worktime:
@@ -194,6 +191,7 @@ class ReviewAssignments():
 					else:
 						# Approve the rest
 						reason = ""
+						self.data.loc[index,"AssignmentStatus"] = "Approved"
 						self.rejected_column.append("")
 						self.approved_column.append("x")
 

@@ -35,6 +35,7 @@ elif args.model == "textrank":
 	from summa.summarizer import summarize
 
 def evaluate_summary_length(result):
+	# Restrict summaries to be between 2 and 3 sentences long.
 	summary_sentences = sent_tokenize(result)
 	if 1 < len(summary_sentences) < 4: return summary_sentences
 	if len(summary_sentences) >= 4: return summary_sentences[:3]

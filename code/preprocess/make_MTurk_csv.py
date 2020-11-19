@@ -16,6 +16,7 @@ import random
 import string
 import tokenize
 from nltk.tokenize.treebank import TreebankWordDetokenizer
+from collections import Counter
 
 # The exclude list consists of the names of persons, where the extracted biography doesn't match.
 # This has been determined through manual inspection.
@@ -56,6 +57,7 @@ def person_data():
 
 	total_number_of_people = 0
 	excluded = 0
+	gender_count = Counter()
 
 	for gender in genders:
 		biographies = json.load(open(f"data/wikipedia_raw/en_{gender}_summaries.json")) 
@@ -87,10 +89,12 @@ def person_data():
 
 				person_output = [person, biography, summary_A, summary_B, model_A, model_B]
 				output.append(person_output)
+				gender_count[gender] += 1
 			else:
 				excluded += 1
 
 	print(f'There are {total_number_of_people} biographies in the input dataset and {len(output)} in the output data.')
+	print(f"There are {gender_count['men']} men and {gender_count['women']} women")
 	print(f'{excluded} people have been excluded.')
 	return output
 
@@ -98,16 +102,13 @@ def write_out():
 	header = ["person", "biography", "summary_A", "summary_B", "summary_A_model", "summary_B_model"]
 	
 	data = person_data()
-	output_data = random.sample(data, len(data))
-	with open('data/mturk/input/MTurk_input.csv', 'w') as f:
-		csv_writer = csv.writer(f)
-		csv_writer.writerow(header)
+	# output_data = random.sample(data, len(data))
+	# with open('data/mturk/input/MTurk_input.csv', 'w') as f:
+	# 	csv_writer = csv.writer(f)
+	# 	csv_writer.writerow(header)
 
-		for n in range(len(output_data)):
-			#person_row = random.choice(output_data)
-			#print(output_data[n][0])
-			csv_writer.writerow(output_data[n])
-			#output_data.remove(person_row)
+	# 	for n in range(len(output_data)):
+	# 		csv_writer.writerow(output_data[n])
 
 if __name__ == "__main__":
 	write_out()

@@ -29,6 +29,7 @@ class MakeVectors():
 			"male/white/over30": {"X": [], "Y": []}, 
 			"female/american_indian/over30": {"X": [], "Y": []}
 		}
+		self.word_lengths = {"matchsum": [], "textrank": []}
 
 	def _get_representations(self, demographics):
 
@@ -63,10 +64,11 @@ class MakeVectors():
 		vector = vectorizer.transform([summary])
 		return vector.toarray()[0]
 
-	def _get_average_word_length(self, summary):
+	def _get_average_word_length(self, summary, system):
 		# Returns the average word length of the summary.
 		words = summary.split()
 		average = sum(len(word) for word in words) / len(words)
+		self.word_lengths[system].append(average)
 		return average
 
 	def _check_first_sentence(self, summary, biography):
@@ -88,10 +90,10 @@ class MakeVectors():
 		complexity = textstat.text_standard(summary, float_output=True)
 		return(complexity)
 
-	def _get_features(self, summary, biography):
+	def _get_features(self, summary, biography, system):
 		# Returns the features for a summary.
 		vector = self._get_onehot_vector(summary)
-		average_word_length = self._get_average_word_length(summary)
+		average_word_length = self._get_average_word_length(summary, system)
 		first_sentence_included = self._check_first_sentence(summary, biography)
 		type_token = self._get_type_token(summary)
 		text_complexity = self._get_text_complexity(summary)
@@ -114,8 +116,8 @@ class MakeVectors():
 			matchsum = self._clean_text(self.biography_representations[br]["matchsum"])
 
 			# Vector representation:
-			textrank_features = self._get_features(textrank, biography)
-			matchsum_features = self._get_features(matchsum, biography)
+			textrank_features = self._get_features(textrank, biography, "matchsum")
+			matchsum_features = self._get_features(matchsum, biography, "textrank")
 			vector_representation = np.append(textrank_features, matchsum_features)
 			
 			if self.biography_representations[br]["summary_preference"] == "textrank":
@@ -132,6 +134,8 @@ class MakeVectors():
 		for rep in self.data:
 			assert(len(self.data[rep]["Y"]) == len(self.data[rep]["X"]))
 
+		print("average word length MatchSum:", sum(self.word_lengths["matchsum"])/len(self.word_lengths["matchsum"]))
+		print("average word length TextRank:", sum(self.word_lengths["textrank"])/len(self.word_lengths["textrank"]))
 		return self.data
 
 class TextClassification():
