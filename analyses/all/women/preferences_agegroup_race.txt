@@ -1,0 +1,8 @@
+\begin{tabular}{lllllll}
+\hline
+ Demographics  & TextRank & \%    & MatchSum & \%    & neither & \%   \\
+ over30/white  & 132      & 38.9 & 177      & 52.2 & 30      & 8.8 \\
+ under30/black & 42       & 47.2 & 41       & 46.1 & 6       & 6.7 \\
+ under30/white & 38       & 40.0 & 49       & 51.6 & 8       & 8.4 \\
+\hline
+\end{tabular}

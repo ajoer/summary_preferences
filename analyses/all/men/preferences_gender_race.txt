@@ -1,0 +1,12 @@
+\begin{tabular}{lllllll}
+\hline
+ Demographics           & TextRank & \%    & MatchSum & \%    & neither & \%    \\
+ female/american\_indian & 9        & 30.0 & 20       & 66.7 & 1       & 3.3  \\
+ female/black           & 51       & 40.8 & 63       & 50.4 & 11      & 8.8  \\
+ female/white           & 167      & 46.0 & 178      & 49.0 & 18      & 5.0  \\
+ male/asian             & 16       & 36.4 & 17       & 38.6 & 11      & 25.0 \\
+ male/black             & 81       & 52.3 & 73       & 47.1 & 1       & 0.6  \\
+ male/hispanic          & 8        & 36.4 & 14       & 63.6 & 0       & 0.0  \\
+ male/white             & 244      & 39.2 & 324      & 52.0 & 55      & 8.8  \\
+\hline
+\end{tabular}

@@ -1,0 +1,10 @@
+\begin{tabular}{lll}
+\hline
+ Demographics   & Count & Percentage \\
+ over30/female  & 701   & 25.0       \\
+ over30/male    & 1059  & 37.8       \\
+ under30/female & 318   & 11.3       \\
+ under30/male   & 726   & 25.9       \\
+ Total          & 2804  & 100.0      \\
+\hline
+\end{tabular}

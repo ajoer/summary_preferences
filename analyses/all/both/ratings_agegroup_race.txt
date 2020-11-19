@@ -1,0 +1,13 @@
+\begin{tabular}{lllllll}
+\hline
+                        & Informative &          & Useful   &          & Fluent   &          \\
+ Demographics           & TextRank    & MatchSum & TextRank & MatchSum & TextRank & MatchSum \\
+ over30/american\_indian & 0.94        & 0.89     & 0.94     & 0.94     & 0.81     & 0.86     \\
+ over30/black           & 0.71        & 0.81     & 0.6      & 0.79     & 0.71     & 0.76     \\
+ over30/white           & 0.9         & 0.92     & 0.88     & 0.92     & 0.85     & 0.91     \\
+ under30/asian          & 0.79        & 0.79     & 0.8      & 0.87     & 0.75     & 0.89     \\
+ under30/black          & 0.93        & 0.95     & 0.9      & 0.94     & 0.9      & 0.93     \\
+ under30/hispanic       & 0.53        & 0.77     & 0.53     & 0.67     & 0.8      & 0.8      \\
+ under30/white          & 0.8         & 0.82     & 0.74     & 0.81     & 0.82     & 0.84     \\
+\hline
+\end{tabular}

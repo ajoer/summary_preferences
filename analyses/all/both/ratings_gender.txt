@@ -1,0 +1,8 @@
+\begin{tabular}{lllllll}
+\hline
+              & Informative &          & Useful   &          & Fluent   &          \\
+ Demographics & TextRank    & MatchSum & TextRank & MatchSum & TextRank & MatchSum \\
+ female       & 0.84        & 0.89     & 0.82     & 0.88     & 0.84     & 0.87     \\
+ male         & 0.89        & 0.91     & 0.86     & 0.91     & 0.86     & 0.91     \\
+\hline
+\end{tabular}

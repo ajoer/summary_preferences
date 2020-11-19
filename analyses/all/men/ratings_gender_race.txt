@@ -1,0 +1,13 @@
+\begin{tabular}{lllllll}
+\hline
+                        & Informative &          & Useful   &          & Fluent   &          \\
+ Demographics           & TextRank    & MatchSum & TextRank & MatchSum & TextRank & MatchSum \\
+ female/american\_indian & 0.87        & 0.87     & 0.83     & 0.93     & 0.7      & 0.87     \\
+ female/black           & 0.9         & 0.95     & 0.86     & 0.91     & 0.89     & 0.9      \\
+ female/white           & 0.83        & 0.88     & 0.8      & 0.86     & 0.83     & 0.86     \\
+ male/asian             & 0.84        & 0.8      & 0.84     & 0.86     & 0.82     & 0.89     \\
+ male/black             & 0.92        & 0.92     & 0.88     & 0.93     & 0.89     & 0.92     \\
+ male/hispanic          & 0.64        & 0.91     & 0.55     & 0.77     & 0.82     & 0.82     \\
+ male/white             & 0.9         & 0.92     & 0.87     & 0.92     & 0.84     & 0.92     \\
+\hline
+\end{tabular}
