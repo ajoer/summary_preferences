@@ -1,0 +1,27 @@
+{
+    "white": {
+        "score": 0.5921052631578947,
+        "top20_features": [
+            "m_how",
+            "t_couldn",
+            "t_are",
+            "m_have",
+            "m_each",
+            "t_aren't",
+            "t_o",
+            "m_there",
+            "t_with",
+            "t_other",
+            "t_should",
+            "t_don't",
+            "t_which",
+            "t_didn't",
+            "t_but",
+            "t_all",
+            "t_whom",
+            "t_until",
+            "m_that'll",
+            "m_did"
+        ]
+    }
+}

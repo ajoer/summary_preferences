@@ -1,0 +1,27 @@
+{
+    "white": {
+        "score": 0.620253164556962,
+        "top20_features": [
+            "m_type_token",
+            "t_shouldn't",
+            "t_are",
+            "m_have",
+            "t_should",
+            "m_there",
+            "t_ll",
+            "m_how",
+            "t_don't",
+            "t_aren't",
+            "t_other",
+            "t_o",
+            "t_which",
+            "t_all",
+            "t_with",
+            "t_whom",
+            "t_until",
+            "t_but",
+            "m_that'll",
+            "m_did"
+        ]
+    }
+}
