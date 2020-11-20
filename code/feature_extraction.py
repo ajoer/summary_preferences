@@ -13,7 +13,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 """
-	Make vector representations of summaries and do experiment
+	Make vector representations of summaries and run Logistic regression on demographic groups with significant results (bonferroni.txt). 
+	Outputs the top 20 most important features for each demographic group. 
 """
 
 class MakeVectors():
@@ -162,7 +163,6 @@ class TextClassification():
 		
 		top20_dict = {}
 		for rep in self.input_data:
-			print(f"--------- {rep} ---------")
 			top20_dict[rep] = {
 				"score": 0, 
 				"top20_features": []
@@ -200,7 +200,7 @@ class TextClassification():
 			json.dump(top20_dict, outfile, sort_keys=True, indent=4,)
 		
 if __name__ == "__main__":
-	for gender in ['both', 'men','women']: # both, men or women
+	for gender in ['both', 'men', 'women']: # both, men or women
 		for race_division in ['all', 'binary']: # all or binary (white/rest)
 			print(f"\nRunning for {race_division} race division on {gender} gendered biographies")
 			TextClassification(gender, race_division)

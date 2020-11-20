@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """ 
-	Get summaries from Wikipedia.
-	For now, for English only. For other languages, get title of Wikipedia page, something like this:
-		https://www.wikidata.org/w/api.php?action=wbgetentities&format=xml&props=sitelinks&ids=Q19675&sitefilter=frwiki
-
+Get summaries from Wikipedia (based on an input file with the title of the Wikipedia page. 
+This input file is created using "men" and "women" subcategories on Wikidata.
+English only. 
+For other languages, get title of Wikipedia page, something like this:
+	https://www.wikidata.org/w/api.php?action=wbgetentities&format=xml&props=sitelinks&ids=Q19675&sitefilter=frwiki
 """
 
 import argparse
@@ -14,7 +15,7 @@ from Wikipedia.wikipedia.exceptions import DisambiguationError, PageError
 
 parser = argparse.ArgumentParser(description='''''')
 parser.add_argument("language", default="en")
-parser.add_argument("source", default="restaurants")
+parser.add_argument("gender", default="women")
 
 args = parser.parse_args()
 
@@ -51,7 +52,8 @@ def process_line(line):
 	return event, line_dict
 
 def main():
-	input_data = open(f"resources/{args.language}_{args.source}.tsv").readlines()
+	# NB: the input_data file does not exist and must be re-established.
+	input_data = open(f"resources/{args.language}_{args.gender}.tsv").readlines()
 	output_dictionary = {}
 	wikipedia.set_lang(args.language)
 
@@ -60,7 +62,7 @@ def main():
 		if line_rep is None: continue
 		output_dictionary[event] = line_rep
 		
-	with open(f"data/{args.language}_{args.source}_summaries.json", 'w') as outfile:
+	with open(f"data/summaries/input/wikipedia_raw/{args.language}_{args.gender}_summaries.json", 'w') as outfile:
 		json.dump(output_dictionary, outfile, indent=4)
 
 if __name__ == "__main__":

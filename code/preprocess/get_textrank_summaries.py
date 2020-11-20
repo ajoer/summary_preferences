@@ -22,7 +22,7 @@ parser.add_argument("--model", default="textrank", required=False, help="name of
 
 args = parser.parse_args()
 
-input_file = f"data/wikipedia_raw/en_{args.gender}_summaries.json"
+input_file = f"data/summaries/input/wikipedia_raw/en_{args.gender}_summaries.json"
 data = json.load(open(input_file, encoding="utf-8"))
 
 output_data = {}
@@ -65,7 +65,7 @@ def main():
 		out = ' '.join(x for x in sentences)
 		output_data[person] = out
 
-	with open(f'data/summaries/en_{args.gender}_{args.model}.json', 'w') as outfile:
+	with open(f'data/summaries/output/en_{args.gender}_{args.model}.json', 'w') as outfile:
 	    json.dump(output_data, outfile, sort_keys=True, indent=4,)
 
 if __name__ == "__main__":

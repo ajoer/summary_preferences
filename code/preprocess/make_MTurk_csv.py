@@ -39,7 +39,7 @@ def get_bios():
 	# Make one dict with all biogrtaphies (women and men together).
 	biographies = {}
 	for gender in genders:
-		gender_bios = json.load(open(f"data/wikipedia_raw/en_{gender}_summaries.json")) 
+		gender_bios = json.load(open(f"data/summaries/input/wikipedia_raw/en_{gender}_summaries.json")) 
 		print(f"there are {len(gender_bios)} people in the {gender} biography file")
 		biographies = {**biographies, **gender_bios} 
 	return biographies
@@ -60,10 +60,10 @@ def person_data():
 	gender_count = Counter()
 
 	for gender in genders:
-		biographies = json.load(open(f"data/wikipedia_raw/en_{gender}_summaries.json")) 
+		biographies = json.load(open(f"data/summaries/input/wikipedia_raw/en_{gender}_summaries.json")) 
 		summaries = {
-			"textrank_summaries": json.load(open(f"data/summaries/en_{gender}_textrank.json")),
-			"matchsum_summaries": json.load(open(f"data/summaries/en_{gender}_matchsum.json")) 
+			"textrank_summaries": json.load(open(f"data/summaries/output/en_{gender}_textrank.json")),
+			"matchsum_summaries": json.load(open(f"data/summaries/output/en_{gender}_matchsum.json")) 
 		}
 		people = list(biographies.keys())
 		number_of_people = len(people)
@@ -102,13 +102,13 @@ def write_out():
 	header = ["person", "biography", "summary_A", "summary_B", "summary_A_model", "summary_B_model"]
 	
 	data = person_data()
-	# output_data = random.sample(data, len(data))
-	# with open('data/mturk/input/MTurk_input.csv', 'w') as f:
-	# 	csv_writer = csv.writer(f)
-	# 	csv_writer.writerow(header)
+	output_data = random.sample(data, len(data))
+	with open('data/mturk/input/MTurk_input.csv', 'w') as f:
+		csv_writer = csv.writer(f)
+		csv_writer.writerow(header)
 
-	# 	for n in range(len(output_data)):
-	# 		csv_writer.writerow(output_data[n])
+		for n in range(len(output_data)):
+			csv_writer.writerow(output_data[n])
 
 if __name__ == "__main__":
 	write_out()

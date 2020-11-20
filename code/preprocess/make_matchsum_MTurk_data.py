@@ -14,7 +14,7 @@ import string
 from nltk.tokenize import word_tokenize
 
 input_path = "resources/MatchSum/result/MatchSum_cnndm_roberta.ckpt"
-output_path = "data/summaries"
+output_path = "data/summaries/output/"
 
 def make_person_lookup_dict(gender):
 	lookup_dict = {}
@@ -24,18 +24,13 @@ def make_person_lookup_dict(gender):
 		lookup_dict[approximation.strip()] = name
 	return lookup_dict
 
-def clean_text():
-	pass
-	#"".join([" "+i if not i.startswith("'") and i not in string.punctuation else i for i in tokens]).strip()
-
 def main():
-	genders = ["women"] # "men"
-
-	for gender in genders:
+	for gender in ["women", "men"]:
 
 		output = {}
 		people = set()
-		with jsonlines.open(f"data/wikipedia_matchsum/en_{gender}.jsonl") as f:
+		# Changed the path here, not entirely sure that this is right:
+		with jsonlines.open(f"data/summaries/input/matchsum_input/get_candidates/en_{gender}.jsonl") as f:
 			for line in f.iter():
 				people.add(line["person"])
 		input_summaries = glob.glob(f"{input_path}/{gender}/dec/*")
@@ -45,13 +40,14 @@ def main():
 			#text = " ".join(word_tokenize(open(file_name, encoding="utf-8").read()))
 			text = open(file_name, encoding="utf-8").read()
 			text = "".join([""+i if not i.startswith("'") and i not in string.punctuation else i for i in text]).strip()
+			# MatchSum outputs a different name:
 			approximated_name = file_name.split("/")[-1]
 			if approximated_name in lookup_dict:
 				real_name = lookup_dict[approximated_name]
 				output[real_name] = text
 			else:
 				if approximated_name == "lookup.txt": continue
-				print("This person is not in the look up dictionary:\t", approximated_name)
+				print("This person is not in the lookup dictionary:\t", approximated_name)
 		assert(len(output)==len(input_summaries)-1)
 
 		with open(f"{output_path}/en_{gender}_matchsum.json", "w") as outfile:

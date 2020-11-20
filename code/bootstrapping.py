@@ -10,7 +10,8 @@ from collections import Counter
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 """
-	Bootstrapping on MTurk preferences.
+	Bootstrapping on MTurk preferences for significance testing. 
+	Bonferroni cutoff is implemented to take several testing settings into account. 
 
 """
 
