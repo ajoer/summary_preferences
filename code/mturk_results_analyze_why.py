@@ -1,3 +1,4 @@
+import csv
 import json
 import nltk 
 import nltk.data
@@ -16,20 +17,16 @@ from sklearn.preprocessing import StandardScaler
 """
 
 class MakeVectors():
-	def __init__(self, biography_representations):
-		self.biography_representations = biography_representations
-		self.data = {
-			"over30": {"X": [], "Y": []}, 
-			"american_indian": {"X": [], "Y": []}, 
-			"male/white": {"X": [], "Y": []}, 
-			"female/american_indian": {"X": [], "Y": []},
-			"male/over30": {"X": [], "Y": []},
-			"asian/under30": {"X": [], "Y": []},
-			"male/asian/under30": {"X": [], "Y": []}, 
-			"male/white/over30": {"X": [], "Y": []}, 
-			"female/american_indian/over30": {"X": [], "Y": []}
-		}
+	def __init__(self, gender, race_division):
+		self.biography_representations = json.load(open(f"analyses/{race_division}/{gender}/biography_representations.json"))
 		self.word_lengths = {"matchsum": [], "textrank": []}
+		self.data = {}
+		self._make_datadict(csv.reader(open(f"analyses/{race_division}/{gender}/bonferroni.tsv"), delimiter="\t"))
+		
+	def _make_datadict(self, significant_results):
+		for n,result in enumerate(significant_results):
+			if n == 0: continue
+			self.data[result[0]] = {"X": [], "Y": []}
 
 	def _get_representations(self, demographics):
 
@@ -139,11 +136,12 @@ class MakeVectors():
 		return self.data
 
 class TextClassification():
-	def __init__(self, data):
+	def __init__(self, gender, race_division):
 
 		print("Starting text classification")
-		self.input_data = data
-
+		self.gender = gender
+		self.race_division = race_division
+		self.input_data = MakeVectors(self.gender, self.race_division).make_vector_representations()
 		self.main()
 
 	def _split_data(self, data):
@@ -161,11 +159,18 @@ class TextClassification():
 		return classification_data
 
 	def main(self):
+		
+		top20_dict = {}
 		for rep in self.input_data:
 			print(f"--------- {rep} ---------")
+			top20_dict[rep] = {
+				"score": 0, 
+				"top20_features": []
+			}
+
 			classification_data = self._split_data(self.input_data[rep])
 			clf = LogisticRegression(random_state=0, max_iter=1000).fit(classification_data["train_X"], classification_data["train_Y"])
-			print("Score:\t", clf.score(classification_data["test_X"], classification_data["test_Y"]))
+			top20_dict[rep]["score"] = clf.score(classification_data["test_X"], classification_data["test_Y"])
 
 			importance = clf.coef_
 			indexed = list(enumerate(importance[0])) # attach indices to the list
@@ -189,11 +194,13 @@ class TextClassification():
 				if str(index) in non_stop_words: feature = f"{model}_{non_stop_words[str(index)]}"
 				else: feature = f"{model}_{vocab[index]}"				
 				top20_features.append(feature)
-			print(top20_features)
-			
-def main(biography_representations):
-	data = MakeVectors(biography_representations).make_vector_representations()
-	TextClassification(data)
+			top20_dict[rep]["top20_features"] = top20_features
 
+		with open(f"analyses/{self.race_division}/{self.gender}/top20_features.json", "w") as outfile:
+			json.dump(top20_dict, outfile, sort_keys=True, indent=4,)
+		
 if __name__ == "__main__":
-   	main(json.load(open("analyses/all/biography_representations.json")))
+	for gender in ['both', 'men','women']: # both, men or women
+		for race_division in ['all', 'binary']: # all or binary (white/rest)
+			print(f"\nRunning for {race_division} race division on {gender} gendered biographies")
+			TextClassification(gender, race_division)
